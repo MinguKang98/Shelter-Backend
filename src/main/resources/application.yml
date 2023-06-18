@@ -1,6 +1,6 @@
 spring:
     datasource:
-        url: jdbc:h2:tcp://localhost/~/running-crew
+        url: jdbc:h2:tcp://localhost/~/shelter
         username: sa
         password:
         driver-class-name: org.h2.Driver
