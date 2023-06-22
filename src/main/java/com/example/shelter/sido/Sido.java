@@ -1,6 +1,7 @@
 package com.example.shelter.sido;
 
 import jakarta.persistence.*;
+import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 
@@ -18,10 +19,7 @@ public class Sido {
     @Column(unique = true)
     private String name;
 
-    public Sido(String name) {
-        this.name = name;
-    }
-
+    @Builder
     public Sido(Long id, String name) {
         this.id = id;
         this.name = name;
