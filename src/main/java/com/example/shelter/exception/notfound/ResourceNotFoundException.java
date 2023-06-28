@@ -1,17 +1,17 @@
 package com.example.shelter.exception.notfound;
 
-public class ResourceNotFoundException extends RuntimeException{
+import com.example.shelter.exception.BaseException;
 
-    private String errorCode;
-    private String message;
+import java.util.Map;
 
-    public ResourceNotFoundException(String errorCode, String message) {
-        this.errorCode = errorCode;
-        this.message = message;
+public class ResourceNotFoundException extends BaseException {
+
+    public ResourceNotFoundException(String code, String message) {
+        super(code, message);
     }
 
-    public String getErrorCode() {
-        return errorCode;
+    public ResourceNotFoundException(String code, String message, Map<String, String> errors) {
+        super(code, message, errors);
     }
 
 }
