@@ -1,6 +1,8 @@
 package com.example.shelter.sido;
 
+import com.example.shelter.common.BaseEntity;
 import jakarta.persistence.*;
+import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 
@@ -8,7 +10,7 @@ import lombok.NoArgsConstructor;
 @Getter
 @Table(name = "sidos")
 @NoArgsConstructor
-public class Sido {
+public class Sido extends BaseEntity {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -18,10 +20,10 @@ public class Sido {
     @Column(unique = true)
     private String name;
 
-    public Sido(String name) {
-        this.name = name;
-    }
+    @Column
+    private boolean isDeleted = false;
 
+    @Builder
     public Sido(Long id, String name) {
         this.id = id;
         this.name = name;
@@ -29,6 +31,10 @@ public class Sido {
 
     public void updateName(String name) {
         this.name = name;
+    }
+
+    public void updateDeleted(boolean isDeleted) {
+        this.isDeleted = isDeleted;
     }
 
 }
