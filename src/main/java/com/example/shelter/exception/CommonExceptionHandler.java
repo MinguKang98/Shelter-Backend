@@ -14,7 +14,7 @@ public class CommonExceptionHandler {
     @ExceptionHandler(ResourceNotFoundException.class)
     public ResponseEntity<ErrorResponse> ResourceNotFoundExceptionHandler(ResourceNotFoundException e) {
         ErrorResponse errorResponse = ErrorResponse.builder()
-                .code(e.getErrorCode())
+                .code(e.getCode())
                 .message(e.getMessage())
                 .errors(Map.of())
                 .build();
