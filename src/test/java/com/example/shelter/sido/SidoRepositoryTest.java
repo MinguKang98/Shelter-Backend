@@ -1,9 +1,9 @@
 package com.example.shelter.sido;
 
-import jakarta.persistence.EntityManager;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.orm.jpa.DataJpaTest;
+import org.springframework.boot.test.autoconfigure.orm.jpa.TestEntityManager;
 import org.springframework.data.domain.Sort;
 
 import java.util.Comparator;
@@ -19,7 +19,7 @@ class SidoRepositoryTest {
     SidoRepository sidoRepository;
 
     @Autowired
-    EntityManager em;
+    TestEntityManager em;
 
     @Test
     public void save_테스트() {
@@ -32,38 +32,42 @@ class SidoRepositoryTest {
         em.clear();
 
         //then
-        Optional<Sido> findSido = sidoRepository.findByIdNotDeleted(saveSido.getId());
-        assertThat(findSido).isNotEmpty();
-        assertThat(findSido.get().getId()).isEqualTo(saveSido.getId());
+        Sido findSido = em.find(Sido.class, saveSido.getId());
+        assertThat(findSido).isNotNull();
+        assertThat(findSido.getId()).isEqualTo(saveSido.getId());
     }
 
     @Test
     public void findByIdNotDeleted_존재하는_시도_테스트() {
         //given
         String name = "서울시";
-        Sido saveSido = sidoRepository.save(Sido.builder().name(name).build());
+        Sido sido = Sido.builder()
+                .name(name)
+                .build();
+        em.persist(sido);
         em.flush();
-        em.clear();
 
         ///when
-        Optional<Sido> findSido = sidoRepository.findByIdNotDeleted(saveSido.getId());
+        Optional<Sido> findSido = sidoRepository.findByIdNotDeleted(sido.getId());
 
         //then
         assertThat(findSido).isNotEmpty();
-        assertThat(findSido.get().getId()).isEqualTo(saveSido.getId());
+        assertThat(findSido.get().getId()).isEqualTo(sido.getId());
     }
 
     @Test
     public void findByIdNotDeleted_삭제된_시도_테스트() {
         //given
         String name = "서울시";
-        Sido saveSido = sidoRepository.save(Sido.builder().name(name).build());
-        saveSido.updateDeleted(true);
+        Sido sido = Sido.builder()
+                .name(name)
+                .build();
+        sido.updateDeleted(true);
+        em.persist(sido);
         em.flush();
-        em.clear();
 
         ///when
-        Optional<Sido> findSido = sidoRepository.findByIdNotDeleted(saveSido.getId());
+        Optional<Sido> findSido = sidoRepository.findByIdNotDeleted(sido.getId());
 
         //then
         assertThat(findSido).isEmpty();
@@ -85,22 +89,28 @@ class SidoRepositoryTest {
     public void findByNameNotDeleted_존재하는_시도_테스트() {
         //given
         String name = "서울시";
-        Sido saveSido = sidoRepository.save(Sido.builder().name(name).build());
+        Sido sido = Sido.builder()
+                .name(name)
+                .build();
+        em.persistAndFlush(sido);
 
         ///when
         Optional<Sido> findSido = sidoRepository.findByNameNotDeleted(name);
 
         //then
         assertThat(findSido).isNotEmpty();
-        assertThat(findSido.get()).isEqualTo(saveSido);
+        assertThat(findSido.get().getId()).isEqualTo(sido.getId());
     }
 
     @Test
     public void findByNameNotDeleted_삭제된_시도_테스트() {
         //given
         String name = "서울시";
-        Sido saveSido = sidoRepository.save(Sido.builder().name(name).build());
-        saveSido.updateDeleted(true);
+        Sido sido = Sido.builder()
+                .name(name)
+                .build();
+        sido.updateDeleted(true);
+        em.persistAndFlush(sido);
 
         ///when
         Optional<Sido> findSido = sidoRepository.findByNameNotDeleted(name);
@@ -126,8 +136,12 @@ class SidoRepositoryTest {
         //given
         int count = 10;
         for (int i = 1; i < count + 1; i++) {
-            sidoRepository.save(Sido.builder().name("sido" + i).build());
+            Sido sido = Sido.builder()
+                    .name("sido"+i)
+                    .build();
+            em.persist(sido);
         }
+        em.flush();
 
         ///when
         List<Sido> sidos = sidoRepository.findAllNotDeleted();
@@ -141,8 +155,12 @@ class SidoRepositoryTest {
         //given
         int count = 10;
         for (int i = 1; i < count + 1; i++) {
-            sidoRepository.save(Sido.builder().name("sido" + i).build());
+            Sido sido = Sido.builder()
+                    .name("sido"+i)
+                    .build();
+            em.persist(sido);
         }
+        em.flush();
 
         ///when
         List<Sido> sidos = sidoRepository.findAllNotDeleted(Sort.by(Sort.Direction.ASC, "name"));
@@ -157,10 +175,13 @@ class SidoRepositoryTest {
         //given
         int count = 10;
         for (int i = 1; i < count + 1; i++) {
-            Sido sido = Sido.builder().name("sido" + i).build();
+            Sido sido = Sido.builder()
+                    .name("sido"+i)
+                    .build();
             sido.updateDeleted(true);
-            sidoRepository.save(sido);
+            em.persist(sido);
         }
+        em.flush();
 
         ///when
         List<Sido> sidos = sidoRepository.findAllNotDeleted();
@@ -173,15 +194,18 @@ class SidoRepositoryTest {
     public void delete_테스트() {
         //given
         String name = "서울시";
-        Sido saveSido = sidoRepository.save(Sido.builder().name(name).build());
+        Sido sido = Sido.builder()
+                .name(name)
+                .build();
+        em.persistAndFlush(sido);
 
         ///when
-        sidoRepository.delete(saveSido);
+        sidoRepository.delete(sido);
         em.flush();
         em.clear();
 
         //then
-        Optional<Sido> findSido = sidoRepository.findByIdNotDeleted(saveSido.getId());
+        Optional<Sido> findSido = sidoRepository.findByIdNotDeleted(sido.getId());
         assertThat(findSido).isEmpty();
     }
 
