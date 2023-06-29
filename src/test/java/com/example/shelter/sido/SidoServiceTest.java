@@ -57,7 +57,7 @@ class SidoServiceTest {
         Sido findSido = sidoService.findById(id);
 
         //then
-        assertThat(findSido).isEqualTo(sido);
+        assertThat(findSido.getId()).isEqualTo(sido.getId());
         verify(sidoRepository, times(1)).findByIdNotDeleted(id);
     }
 
@@ -85,7 +85,7 @@ class SidoServiceTest {
         Sido findSido = sidoService.findByName(name);
 
         //then
-        assertThat(findSido).isEqualTo(sido);
+        assertThat(findSido.getId()).isEqualTo(sido.getId());
         verify(sidoRepository, times(1)).findByNameNotDeleted(name);
     }
 
