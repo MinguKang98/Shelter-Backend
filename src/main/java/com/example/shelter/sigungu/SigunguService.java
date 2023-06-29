@@ -16,27 +16,47 @@ public class SigunguService {
     private final SigunguRepository sigunguRepository;
 
     public List<Sigungu> findAll() {
-        return sigunguRepository.findAll(Sort.by(Sort.Direction.ASC, "name"));
+        return sigunguRepository.findAllNotDeleted(Sort.by(Sort.Direction.ASC, "name"));
     }
 
     public List<Sigungu> findAllBySido(Sido sido) {
-        return sigunguRepository.findAllBySido(sido, Sort.by(Sort.Direction.ASC, "name"));
+        return sigunguRepository.findAllBySidoNotDeleted(sido, Sort.by(Sort.Direction.ASC, "name"));
     }
 
     public Sigungu findById(Long id) {
-        return sigunguRepository.findById(id).orElseThrow(SigunguNotFoundException::new);
+        return sigunguRepository.findByIdNotDeleted(id)
+                .orElseThrow(() -> new SigunguNotFoundException(id));
+    }
+
+    @Transactional
+    public Long save(Sigungu sigungu) {
+        return sigunguRepository.save(sigungu).getId();
+    }
+
+    @Transactional
+    public void saveAll(List<Sigungu> sigungus) {
+        sigunguRepository.saveAll(sigungus);
     }
 
     @Transactional
     public void updateName(Long id, String name) {
-        Sigungu sigungu = sigunguRepository.findById(id).orElseThrow(SigunguNotFoundException::new);
+        Sigungu sigungu = sigunguRepository.findByIdNotDeleted(id)
+                .orElseThrow(() -> new SigunguNotFoundException(id));
         sigungu.updateName(name);
     }
 
     @Transactional
-    public void updateSido(Long id, Sido sio) {
-        Sigungu sigungu = sigunguRepository.findById(id).orElseThrow(SigunguNotFoundException::new);
-        sigungu.updateSido(sio);
+    public void updateSido(Long id, Sido sido) {
+        Sigungu sigungu = sigunguRepository.findByIdNotDeleted(id)
+                .orElseThrow(() -> new SigunguNotFoundException(id));
+        sigungu.updateSido(sido);
+    }
+
+    @Transactional
+    public void delete(Long id) {
+        Sigungu sigungu = sigunguRepository.findByIdNotDeleted(id)
+                .orElseThrow(() -> new SigunguNotFoundException(id));
+        sigungu.updateDeleted(true);
     }
 
 }
