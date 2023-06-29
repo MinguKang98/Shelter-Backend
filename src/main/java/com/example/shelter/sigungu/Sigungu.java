@@ -24,6 +24,9 @@ public class Sigungu {
     @JoinColumn(name = "sido_id")
     private Sido sido;
 
+    @Column
+    private boolean isDeleted = false;
+
     @Builder
     public Sigungu(Long id, String name, Sido sido) {
         this.id = id;
@@ -37,6 +40,10 @@ public class Sigungu {
 
     public void updateSido(Sido sido) {
         this.sido = sido;
+    }
+
+    public void updateDeleted(boolean isDeleted) {
+        this.isDeleted = isDeleted;
     }
 
 }
