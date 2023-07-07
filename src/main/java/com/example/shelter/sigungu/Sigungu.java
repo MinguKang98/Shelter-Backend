@@ -1,5 +1,6 @@
 package com.example.shelter.sigungu;
 
+import com.example.shelter.common.BaseEntity;
 import com.example.shelter.sido.Sido;
 import jakarta.persistence.*;
 import lombok.Builder;
@@ -10,7 +11,7 @@ import lombok.NoArgsConstructor;
 @Getter
 @Table(name = "sigungus")
 @NoArgsConstructor
-public class Sigungu {
+public class Sigungu extends BaseEntity {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
