@@ -1,5 +1,6 @@
 package com.example.shelter.dong;
 
+import com.example.shelter.common.BaseEntity;
 import com.example.shelter.sigungu.Sigungu;
 import jakarta.persistence.*;
 import lombok.Builder;
@@ -10,7 +11,7 @@ import lombok.NoArgsConstructor;
 @Getter
 @Table(name = "dongs")
 @NoArgsConstructor
-public class Dong {
+public class Dong extends BaseEntity {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -20,7 +21,7 @@ public class Dong {
     @Column
     private String name;
 
-    @ManyToOne
+    @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "sigungu_id")
     private Sigungu sigungu;
 
