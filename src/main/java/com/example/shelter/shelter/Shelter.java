@@ -6,13 +6,15 @@ import jakarta.persistence.*;
 import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
+import lombok.experimental.SuperBuilder;
 
 @Entity
 @Getter
 @Table(name = "shelters")
 @NoArgsConstructor
 @Inheritance(strategy = InheritanceType.JOINED)
-public class Shelter extends BaseEntity {
+@SuperBuilder
+public abstract class Shelter extends BaseEntity {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -20,6 +22,9 @@ public class Shelter extends BaseEntity {
 
     @Column
     private String name;
+
+    @Column
+    private String address;
 
     @Column
     private Double latitude;
@@ -42,5 +47,7 @@ public class Shelter extends BaseEntity {
         this.longitude = longitude;
         this.dong = dong;
     }
+
+    public abstract ShelterType getShelterType();
 
 }
