@@ -48,4 +48,8 @@ public abstract class Shelter extends BaseEntity {
 
     public abstract ShelterType getShelterType();
 
+    public void updateDeleted(boolean deleted) {
+        isDeleted = deleted;
+    }
+
 }
