@@ -3,6 +3,7 @@ package com.example.shelter.tsunamishelter;
 import com.example.shelter.dong.Dong;
 import com.example.shelter.shelter.Shelter;
 import com.example.shelter.shelter.ShelterType;
+import com.example.shelter.shelter.address.Address;
 import jakarta.persistence.*;
 import lombok.Builder;
 import lombok.Getter;
@@ -28,9 +29,9 @@ public class TsunamiShelter extends Shelter {
     private String type; // 대피소 분류명
 
     @Builder
-    public TsunamiShelter(Long id, String name, Double latitude, Double longitude, Dong dong,
-                          Long capacity, Long length, Long height, String type) {
-        super(id, name, latitude, longitude, dong);
+    public TsunamiShelter(Long id, String name, Address address, Double latitude, Double longitude,
+                          Dong dong, Long capacity, Long length, Long height, String type) {
+        super(id, name, address, latitude, longitude, dong);
         this.capacity = capacity;
         this.length = length;
         this.height = height;
