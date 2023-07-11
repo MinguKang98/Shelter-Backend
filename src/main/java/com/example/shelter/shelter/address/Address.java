@@ -10,27 +10,27 @@ import lombok.NoArgsConstructor;
 public class Address {
 
     @Column
-    private String sido;
+    private String sidoName;
 
     @Column
-    private String sigungu;
+    private String sigunguName;
 
     @Column
-    private String dong;
+    private String dongName;
 
     @Column
     private String detail;
 
     @Builder
-    public Address(String sido, String sigungu, String dong, String detail) {
-        this.sido = sido;
-        this.sigungu = sigungu;
-        this.dong = dong;
+    public Address(String sidoName, String sigunguName, String dongName, String detail) {
+        this.sidoName = sidoName;
+        this.sigunguName = sigunguName;
+        this.dongName = dongName;
         this.detail = detail;
     }
 
     public String getFullAddress() {
-        return String.format("%s %s %s %s", sido, sigungu, dong, detail);
+        return String.format("%s %s %s %s", sidoName, sigunguName, dongName, detail);
     }
 
 }
