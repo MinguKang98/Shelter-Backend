@@ -281,4 +281,70 @@ class SigunguRepositoryTest {
         assertThat(findSigungu).isNull();
     }
 
+    @Test
+    public void findBySidoAndNameNotDeleted_존재하는_시군구_테스트() {
+        //given
+        Sido sido = Sido.builder()
+                .name("서울시")
+                .build();
+        em.persist(sido);
+
+        String sigunguName = "동대문구";
+        Sigungu sigungu = Sigungu.builder()
+                .name(sigunguName)
+                .sido(sido)
+                .build();
+        em.persist(sigungu);
+        em.flush();
+
+        ///when
+        Optional<Sigungu> findSigungu = sigunguRepository.findBySidoAndNameNotDeleted(sido, sigunguName);
+
+        //then
+        assertThat(findSigungu).isNotEmpty();
+        assertThat(findSigungu.get().getId()).isEqualTo(sigungu.getId());
+    }
+
+    @Test
+    public void findBySidoAndNameNotDeleted_삭제된_시군구_테스트() {
+        //given
+        Sido sido = Sido.builder()
+                .name("서울시")
+                .build();
+        em.persist(sido);
+
+        String sigunguName = "동대문구";
+        Sigungu sigungu = Sigungu.builder()
+                .name(sigunguName)
+                .sido(sido)
+                .build();
+        sigungu.updateDeleted(true);
+        em.persist(sigungu);
+        em.flush();
+
+        ///when
+        Optional<Sigungu> findSigungu = sigunguRepository.findBySidoAndNameNotDeleted(sido, sigunguName);
+
+        //then
+        assertThat(findSigungu).isEmpty();
+    }
+
+    @Test
+    public void findBySidoAndNameNotDeleted_존재하지_않는_시군구_테스트() {
+        //given
+        Sido sido = Sido.builder()
+                .name("서울시")
+                .build();
+        em.persist(sido);
+        em.flush();
+
+        String sigunguName = "동대문구";
+
+        ///when
+        Optional<Sigungu> findSigungu = sigunguRepository.findBySidoAndNameNotDeleted(sido, sigunguName);
+
+        //then
+        assertThat(findSigungu).isEmpty();
+    }
+
 }
