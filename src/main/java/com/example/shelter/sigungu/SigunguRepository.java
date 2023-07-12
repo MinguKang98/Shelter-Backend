@@ -26,4 +26,7 @@ public interface SigunguRepository extends JpaRepository<Sigungu, Long> {
     @Query("select s from Sigungu s where s.sido = :sido and s.isDeleted = false")
     List<Sigungu> findAllBySidoNotDeleted(@Param("sido") Sido sido, Sort sort);
 
+    @Query("select s from Sigungu s where s.sido = :sido and s.name = :name and s.isDeleted = false")
+    Optional<Sigungu> findBySidoAndNameNotDeleted(@Param("sido") Sido sido, @Param("name") String name);
+
 }
