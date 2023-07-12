@@ -2,8 +2,8 @@ package com.example.shelter.shelter;
 
 import com.example.shelter.common.BaseEntity;
 import com.example.shelter.dong.Dong;
+import com.example.shelter.shelter.address.Address;
 import jakarta.persistence.*;
-import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 
@@ -12,7 +12,7 @@ import lombok.NoArgsConstructor;
 @Table(name = "shelters")
 @NoArgsConstructor
 @Inheritance(strategy = InheritanceType.JOINED)
-public class Shelter extends BaseEntity {
+public abstract class Shelter extends BaseEntity {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -20,6 +20,9 @@ public class Shelter extends BaseEntity {
 
     @Column
     private String name;
+
+    @Embedded
+    private Address address;
 
     @Column
     private Double latitude;
@@ -34,13 +37,19 @@ public class Shelter extends BaseEntity {
     @Column
     private boolean isDeleted = false;
 
-    @Builder
-    public Shelter(Long id, String name, Double latitude, Double longitude, Dong dong) {
+    public Shelter(Long id, String name, Address address, Double latitude, Double longitude, Dong dong) {
         this.id = id;
         this.name = name;
+        this.address = address;
         this.latitude = latitude;
         this.longitude = longitude;
         this.dong = dong;
+    }
+
+    public abstract ShelterType getShelterType();
+
+    public void updateDeleted(boolean deleted) {
+        isDeleted = deleted;
     }
 
 }
