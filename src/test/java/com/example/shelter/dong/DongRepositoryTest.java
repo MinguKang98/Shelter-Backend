@@ -13,7 +13,6 @@ import java.util.List;
 import java.util.Optional;
 
 import static org.assertj.core.api.Assertions.*;
-import static org.junit.jupiter.api.Assertions.*;
 
 @DataJpaTest
 class DongRepositoryTest {
@@ -340,6 +339,137 @@ class DongRepositoryTest {
         //then
         Dong findDong = em.find(Dong.class, dong.getId());
         assertThat(findDong).isNull();
+    }
+
+    @Test
+    public void findBySigunguAndNameNotDeleted_존재하는_동_테스트() {
+        //given
+        Sido sido = Sido.builder()
+                .name("서울시")
+                .build();
+        em.persist(sido);
+
+        Sigungu sigungu = Sigungu.builder()
+                .name("동대문구")
+                .sido(sido)
+                .build();
+        em.persist(sigungu);
+
+        String dongName = "전농동";
+        Dong dong = Dong.builder()
+                .name(dongName)
+                .sigungu(sigungu)
+                .build();
+        em.persistAndFlush(dong);
+        em.clear();
+
+        ///when
+        Optional<Dong> findDong = dongRepository.findBySigunguAndNameNotDeleted(sigungu, dongName);
+
+        //then
+        assertThat(findDong).isNotEmpty();
+        assertThat(findDong.get().getId()).isEqualTo(dong.getId());
+    }
+
+    @Test
+    public void findBySigunguAndNameNotDeleted_삭제된_동_테스트() {
+        //given
+        Sido sido = Sido.builder()
+                .name("서울시")
+                .build();
+        em.persist(sido);
+
+        Sigungu sigungu = Sigungu.builder()
+                .name("동대문구")
+                .sido(sido)
+                .build();
+        em.persist(sigungu);
+
+        String dongName = "전농동";
+        Dong dong = Dong.builder()
+                .name(dongName)
+                .sigungu(sigungu)
+                .build();
+        dong.updateDeleted(true);
+        em.persistAndFlush(dong);
+        em.clear();
+
+        ///when
+        Optional<Dong> findDong = dongRepository.findBySigunguAndNameNotDeleted(sigungu, dongName);
+
+        //then
+        assertThat(findDong).isEmpty();
+    }
+
+    @Test
+    public void findBySigunguAndNameNotDeleted_존재하지_않는_동_테스트() {
+        //given
+        Sido sido = Sido.builder()
+                .name("서울시")
+                .build();
+        em.persist(sido);
+
+        Sigungu sigungu = Sigungu.builder()
+                .name("동대문구")
+                .sido(sido)
+                .build();
+        em.persist(sigungu);
+
+        String dongName = "전농동";
+        em.clear();
+
+        ///when
+        Optional<Dong> findDong = dongRepository.findBySigunguAndNameNotDeleted(sigungu, dongName);
+
+        //then
+        assertThat(findDong).isEmpty();
+    }
+
+    @Test
+    public void findByAddressName_존재하는_동_테스트() {
+        //given
+        String sidoName = "서울특별시";
+        String sigunguName = "동대문구";
+        String dongName = "전농동";
+
+        Sido sido = Sido.builder()
+                .name(sidoName)
+                .build();
+        em.persist(sido);
+
+        Sigungu sigungu = Sigungu.builder()
+                .name(sigunguName)
+                .sido(sido)
+                .build();
+        em.persist(sigungu);
+
+        Dong dong = Dong.builder()
+                .name(dongName)
+                .sigungu(sigungu)
+                .build();
+        em.persistAndFlush(dong);
+        em.clear();
+
+        ///when
+        Optional<Dong> findDong = dongRepository.findByAddressNames(sidoName, sigunguName, dongName);
+
+        //then
+        assertThat(findDong).isNotEmpty();
+        assertThat(findDong.get().getId()).isEqualTo(dong.getId());
+    }
+
+    @Test
+    public void findByAddressName_존재하지_않는_동_테스트() {
+        //given
+        String sidoName = "서울특별시";
+        String sigunguName = "동대문구";
+        String dongName = "전농동";
+
+        ///when
+        Optional<Dong> findDong = dongRepository.findByAddressNames(sidoName, sigunguName, dongName);
+
+        //then
+        assertThat(findDong).isEmpty();
     }
 
 }

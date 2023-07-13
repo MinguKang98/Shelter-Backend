@@ -26,4 +26,17 @@ public interface DongRepository extends JpaRepository<Dong, Long> {
     @Query("select d from Dong d where d.sigungu = :sigungu and d.isDeleted = false")
     List<Dong> findAllBySigunguNotDeleted(@Param("sigungu") Sigungu sigungu, Sort sort);
 
+    @Query("select d from Dong d where d.sigungu = :sigungu and d.name = :name and d.isDeleted = false")
+    Optional<Dong> findBySigunguAndNameNotDeleted(@Param("sigungu") Sigungu sigungu, @Param("name") String name);
+
+    @Query("select d from Dong d " +
+            "left join Sigungu sgg on d.sigungu = sgg " +
+            "left join Sido sd on sgg.sido = sd " +
+            "where sd.name = :sidoName and sd.isDeleted = false and " +
+            "sgg.name = :sigunguName and sgg.isDeleted = false and " +
+            "d.name = :dongName and d.isDeleted = false")
+    Optional<Dong> findByAddressNames(@Param("sidoName") String sidoName,
+                                      @Param("sigunguName") String sigunguName,
+                                      @Param("dongName") String dongName);
+
 }
