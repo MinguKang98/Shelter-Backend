@@ -8,7 +8,7 @@ import org.springframework.data.repository.query.Param;
 import java.util.List;
 import java.util.Optional;
 
-interface SidoRepository extends JpaRepository<Sido, Long> {
+public interface SidoRepository extends JpaRepository<Sido, Long> {
 
     @Query("select s from Sido s where s.id = :id and s.isDeleted = false")
     Optional<Sido> findByIdNotDeleted(@Param("id") Long id);
