@@ -7,8 +7,8 @@ import java.util.List;
 public class AddressUtils {
 
     private static List<String> exceptSigungus = Arrays.asList(
-            "고양시", "성남시", "수원시", "안산시", "안양시",
-            "용인시", "전주시", "창원시", "천안시", "청주시"
+            "고양시", "성남시", "수원시", "안산시", "안양시", "용인시",
+            "전주시", "창원시", "천안시", "청주시", "포항시"
     );
 
     public static Address parseAddress(String address) {
@@ -21,6 +21,18 @@ public class AddressUtils {
         if (partList.get(1).equals("포항시남구")) {
             partList.set(1, "포항시");
             partList.add(2, "남구");
+        }
+
+        if (partList.get(1).equals("포항시") && partList.get(2).equals("남구") && partList.get(3).equals("대보면")) {
+            partList.set(3, "호미곶면");
+        }
+
+        if (partList.get(1).equals("속초시") && partList.get(2).equals("속초시")) {
+            partList.remove(2);
+        }
+
+        if (partList.get(1).equals("삼척시") && partList.get(2).equals("정라동")) {
+            partList.add(2, "정하동");
         }
 
         if (exceptSigungus.contains(partList.get(1))) {
@@ -39,10 +51,5 @@ public class AddressUtils {
                     .build();
         }
     }
-
-//        String address1 = "경기도 성남시 분당구 정자동   178-5";
-//        String address2 = "경기도 남양주시 별내면 청학리 408-2";
-//        String address3 = "부산 기장군 일광면 이화로 47-10";
-//        String address4 = "부산 포항시남구 동해면 입암리 425-1";
 
 }

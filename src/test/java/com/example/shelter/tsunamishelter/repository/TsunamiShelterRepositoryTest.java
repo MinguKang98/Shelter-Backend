@@ -321,4 +321,182 @@ class TsunamiShelterRepositoryTest {
         assertThat(shelters.isEmpty()).isTrue();
     }
 
+    @Test
+    public void countAll_존재하는_지진해일대피소_테스트() {
+        //given
+        Sido sido = Sido.builder()
+                .name("서울시")
+                .build();
+        em.persist(sido);
+
+        Sigungu sigungu = Sigungu.builder()
+                .name("동대문구")
+                .sido(sido)
+                .build();
+        em.persist(sigungu);
+
+        Dong dong = Dong.builder()
+                .name("전농동")
+                .sigungu(sigungu)
+                .build();
+        em.persist(dong);
+
+        for (int i = 0; i < 10; i++) {
+            TsunamiShelter tsunamiShelter = TsunamiShelter.builder().name("테스트 대피소" + i)
+                    .address(new Address("서울시", "동대문구", "전농동", "전일중학교"))
+                    .latitude(37.123456)
+                    .longitude(127.123456)
+                    .dong(dong)
+                    .capacity(100)
+                    .height(10)
+                    .length(10)
+                    .type("학교")
+                    .build();
+            em.persist(tsunamiShelter);
+        }
+        em.flush();
+        em.clear();
+
+        ///when
+        int count = tsunamiShelterRepository.countAll();
+
+        //then
+        assertThat(count).isEqualTo(10);
+    }
+
+    @Test
+    public void countAll_삭제된_지진해일대피소_테스트() {
+        //given
+        Sido sido = Sido.builder()
+                .name("서울시")
+                .build();
+        em.persist(sido);
+
+        Sigungu sigungu = Sigungu.builder()
+                .name("동대문구")
+                .sido(sido)
+                .build();
+        em.persist(sigungu);
+
+        Dong dong = Dong.builder()
+                .name("전농동")
+                .sigungu(sigungu)
+                .build();
+        em.persist(dong);
+
+        for (int i = 0; i < 10; i++) {
+            TsunamiShelter tsunamiShelter = TsunamiShelter.builder().name("테스트 대피소" + i)
+                    .address(new Address("서울시", "동대문구", "전농동", "전일중학교"))
+                    .latitude(37.123456)
+                    .longitude(127.123456)
+                    .dong(dong)
+                    .capacity(100)
+                    .height(10)
+                    .length(10)
+                    .type("학교")
+                    .build();
+            tsunamiShelter.updateDeleted(true);
+            em.persist(tsunamiShelter);
+        }
+        em.flush();
+        em.clear();
+
+        ///when
+        int count = tsunamiShelterRepository.countAll();
+
+        //then
+        assertThat(count).isEqualTo(0);
+    }
+
+    @Test
+    public void countAllBySido_시도에_존재하는_지진해일대피소_테스트() {
+        //given
+        Sido sido = Sido.builder()
+                .name("서울시")
+                .build();
+        em.persist(sido);
+
+        Sigungu sigungu = Sigungu.builder()
+                .name("동대문구")
+                .sido(sido)
+                .build();
+        em.persist(sigungu);
+
+        Dong dong = Dong.builder()
+                .name("전농동")
+                .sigungu(sigungu)
+                .build();
+        em.persist(dong);
+
+        for (int i = 0; i < 10; i++) {
+            TsunamiShelter tsunamiShelter = TsunamiShelter.builder().name("테스트 대피소" + i)
+                    .address(new Address("서울시", "동대문구", "전농동", "전일중학교"))
+                    .latitude(37.123456)
+                    .longitude(127.123456)
+                    .dong(dong)
+                    .capacity(100)
+                    .height(10)
+                    .length(10)
+                    .type("학교")
+                    .build();
+            em.persist(tsunamiShelter);
+        }
+        em.flush();
+        em.clear();
+
+        ///when
+        int count = tsunamiShelterRepository.countAllBySido(sido);
+
+        //then
+        assertThat(count).isEqualTo(10);
+    }
+
+    @Test
+    public void countAllBySido_시도에_존재하지_않는_지진해일대피소_테스트() {
+        //given
+        Sido sido1 = Sido.builder()
+                .name("서울시")
+                .build();
+        em.persist(sido1);
+
+        Sido sido2 = Sido.builder()
+                .name("경기도")
+                .build();
+        em.persist(sido2);
+
+        Sigungu sigungu = Sigungu.builder()
+                .name("동대문구")
+                .sido(sido1)
+                .build();
+        em.persist(sigungu);
+
+        Dong dong = Dong.builder()
+                .name("전농동")
+                .sigungu(sigungu)
+                .build();
+        em.persist(dong);
+
+        for (int i = 0; i < 10; i++) {
+            TsunamiShelter tsunamiShelter = TsunamiShelter.builder().name("테스트 대피소" + i)
+                    .address(new Address("서울시", "동대문구", "전농동", "전일중학교"))
+                    .latitude(37.123456)
+                    .longitude(127.123456)
+                    .dong(dong)
+                    .capacity(100)
+                    .height(10)
+                    .length(10)
+                    .type("학교")
+                    .build();
+            em.persist(tsunamiShelter);
+        }
+        em.flush();
+        em.clear();
+
+        ///when
+        int count = tsunamiShelterRepository.countAllBySido(sido2);
+
+        //then
+        assertThat(count).isEqualTo(0);
+    }
+
 }
