@@ -1,4 +1,4 @@
-package com.example.shelter.earthquake.dto;
+package com.example.shelter.earthquakeshelter.dto;
 
 import lombok.Builder;
 import lombok.Getter;

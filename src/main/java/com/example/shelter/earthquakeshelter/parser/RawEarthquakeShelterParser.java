@@ -1,6 +1,6 @@
-package com.example.shelter.earthquake.parser;
+package com.example.shelter.earthquakeshelter.parser;
 
-import com.example.shelter.earthquake.dto.RawEarthquakeShelter;
+import com.example.shelter.earthquakeshelter.dto.RawEarthquakeShelter;
 import com.example.shelter.exception.badinput.NumberOfRowsException;
 import com.example.shelter.exception.badinput.PageNumberException;
 import lombok.RequiredArgsConstructor;

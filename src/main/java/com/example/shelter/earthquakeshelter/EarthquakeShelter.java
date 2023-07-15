@@ -1,4 +1,4 @@
-package com.example.shelter.earthquake;
+package com.example.shelter.earthquakeshelter;
 
 import com.example.shelter.dong.Dong;
 import com.example.shelter.shelter.Shelter;
