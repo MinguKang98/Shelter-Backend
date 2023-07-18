@@ -8,6 +8,7 @@ import jakarta.persistence.Column;
 import jakarta.persistence.DiscriminatorValue;
 import jakarta.persistence.Entity;
 import jakarta.persistence.Table;
+import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 
@@ -21,6 +22,7 @@ public class EarthquakeShelter extends Shelter {
     @Column
     private int area; // 시설면적
 
+    @Builder
     public EarthquakeShelter(Long id, String name, Address address, Double latitude,
                              Double longitude, Dong dong, int area) {
         super(id, name, address, latitude, longitude, dong);
