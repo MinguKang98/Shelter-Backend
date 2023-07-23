@@ -12,6 +12,7 @@ import lombok.NoArgsConstructor;
 @Table(name = "shelters")
 @NoArgsConstructor
 @Inheritance(strategy = InheritanceType.JOINED)
+@DiscriminatorColumn
 public abstract class Shelter extends BaseEntity {
 
     @Id
