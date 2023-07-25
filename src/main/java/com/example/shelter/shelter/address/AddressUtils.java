@@ -30,6 +30,11 @@ public class AddressUtils {
             partList.add(2, "남구");
         }
 
+        if (partList.get(1).equals("성남시수정구")) {
+            partList.set(1, "성남시");
+            partList.add(2, "수정구");
+        }
+
 
         if (partList.get(0).equals("경기도")) {
             if (partList.get(1).equals("용인시") && partList.get(2).equals("처인구") && partList.get(3).equals("남사면")) {
@@ -40,6 +45,9 @@ public class AddressUtils {
             }
             else if (partList.get(1).equals("여주시") && partList.get(2).equals("능서면")) {
                 partList.set(2, "세종대왕면");
+            }
+            else if (partList.get(1).equals("하남시") && partList.get(2).equals("미사3동")) {
+                partList.set(2, "미사동");
             }
         }
 
@@ -73,6 +81,15 @@ public class AddressUtils {
             }
             else if (partList.get(1).equals("군위군")) {
                 partList.set(0, "대구광역시");
+            }
+        }
+
+        if (partList.get(0).equals("경상남도")) {
+            if (partList.get(1).equals("창원시")) {
+                List<String> changeDongs = List.of("대원동", "용호동", "두대동", "신월동");
+                if (partList.get(2).equals("의창구") && changeDongs.contains(partList.get(3))) {
+                    partList.set(2, "성산구");
+                }
             }
         }
 

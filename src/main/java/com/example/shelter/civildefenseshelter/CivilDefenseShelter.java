@@ -20,15 +20,19 @@ import lombok.NoArgsConstructor;
 public class CivilDefenseShelter extends Shelter {
 
     @Column
-    private int area; // 시설면적
+    private String roadAddress; // 도로명 주소
+
+    @Column
+    private double area; // 시설면적
 
     @Column
     private String type; // 시설 구분명
 
     @Builder
     public CivilDefenseShelter(Long id, String name, Address address, Double latitude, Double longitude,
-                               Dong dong, int area, String type) {
+                               Dong dong, String roadAddress, double area, String type) {
         super(id, name, address, latitude, longitude, dong);
+        this.roadAddress = roadAddress;
         this.area = area;
         this.type = type;
     }
