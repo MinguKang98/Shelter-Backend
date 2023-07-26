@@ -16,7 +16,6 @@ import java.util.List;
 import java.util.Optional;
 
 import static org.assertj.core.api.Assertions.*;
-import static org.junit.jupiter.api.Assertions.*;
 
 @DataJpaTest
 class TsunamiShelterRepositoryTest {
@@ -358,7 +357,7 @@ class TsunamiShelterRepositoryTest {
         em.clear();
 
         ///when
-        int count = tsunamiShelterRepository.countAll();
+        int count = tsunamiShelterRepository.countAllNotDeleted();
 
         //then
         assertThat(count).isEqualTo(10);
@@ -402,7 +401,7 @@ class TsunamiShelterRepositoryTest {
         em.clear();
 
         ///when
-        int count = tsunamiShelterRepository.countAll();
+        int count = tsunamiShelterRepository.countAllNotDeleted();
 
         //then
         assertThat(count).isEqualTo(0);
@@ -445,7 +444,7 @@ class TsunamiShelterRepositoryTest {
         em.clear();
 
         ///when
-        int count = tsunamiShelterRepository.countAllBySido(sido);
+        int count = tsunamiShelterRepository.countAllBySidoNotDeleted(sido);
 
         //then
         assertThat(count).isEqualTo(10);
@@ -493,7 +492,7 @@ class TsunamiShelterRepositoryTest {
         em.clear();
 
         ///when
-        int count = tsunamiShelterRepository.countAllBySido(sido2);
+        int count = tsunamiShelterRepository.countAllBySidoNotDeleted(sido2);
 
         //then
         assertThat(count).isEqualTo(0);

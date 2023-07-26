@@ -30,13 +30,13 @@ public interface TsunamiShelterRepository extends JpaRepository<TsunamiShelter, 
                                                         @Param("maxLon") double maxLon);
 
     @Query("select count(t) from TsunamiShelter t where t.isDeleted = false")
-    int countAll();
+    int countAllNotDeleted();
 
     @Query("select count(t) from TsunamiShelter t " +
             "left join Dong d on t.dong = d " +
             "left join Sigungu sgg on d.sigungu = sgg " +
             "left join Sido sd on sgg.sido = sd " +
             "where sd = :sido and t.isDeleted = false")
-    int countAllBySido(@Param("sido") Sido sido);
+    int countAllBySidoNotDeleted(@Param("sido") Sido sido);
 
 }
