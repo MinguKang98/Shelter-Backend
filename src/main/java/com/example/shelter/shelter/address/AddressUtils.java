@@ -39,23 +39,19 @@ public class AddressUtils {
         if (partList.get(0).equals("경기도")) {
             if (partList.get(1).equals("용인시") && partList.get(2).equals("처인구") && partList.get(3).equals("남사면")) {
                 partList.set(3, "남사읍");
-            }
-            else if (partList.get(1).equals("평택시") && partList.get(2).equals("청북면")) {
+            } else if (partList.get(1).equals("평택시") && partList.get(2).equals("청북면")) {
                 partList.set(2, "청북읍");
-            }
-            else if (partList.get(1).equals("여주시") && partList.get(2).equals("능서면")) {
+            } else if (partList.get(1).equals("여주시") && partList.get(2).equals("능서면")) {
                 partList.set(2, "세종대왕면");
-            }
-            else if (partList.get(1).equals("하남시") && partList.get(2).equals("미사3동")) {
+            } else if (partList.get(1).equals("하남시") && partList.get(2).equals("미사3동")) {
                 partList.set(2, "미사동");
             }
         }
 
-        if(partList.get(0).equals("강원특별자치도")){
+        if (partList.get(0).equals("강원특별자치도")) {
             if (partList.get(1).equals("속초시") && partList.get(2).equals("속초시")) {
                 partList.remove(2);
-            }
-            else if (partList.get(1).equals("삼척시") && partList.get(2).equals("정라동")) {
+            } else if (partList.get(1).equals("삼척시") && partList.get(2).equals("정라동")) {
                 partList.add(2, "정하동");
             }
         }
@@ -63,23 +59,17 @@ public class AddressUtils {
         if (partList.get(0).equals("경상북도")) {
             if (partList.get(1).equals("포항시") && partList.get(2).equals("남구") && partList.get(3).equals("대보면")) {
                 partList.set(3, "호미곶면");
-            }
-            else if (partList.get(1).equals("경산시") && partList.get(2).equals("압량면")) {
+            } else if (partList.get(1).equals("경산시") && partList.get(2).equals("압량면")) {
                 partList.set(2, "압량읍");
-            }
-            else if (partList.get(1).equals("구미시") && partList.get(2).equals("산동면")) {
+            } else if (partList.get(1).equals("구미시") && partList.get(2).equals("산동면")) {
                 partList.set(2, "산동읍");
-            }
-            else if (partList.get(1).equals("경주시") && partList.get(2).equals("양북면")) {
+            } else if (partList.get(1).equals("경주시") && partList.get(2).equals("양북면")) {
                 partList.set(2, "문무대왕면");
-            }
-            else if (partList.get(1).equals("상주시") && partList.get(2).equals("사벌면")) {
+            } else if (partList.get(1).equals("상주시") && partList.get(2).equals("사벌면")) {
                 partList.set(2, "사벌국면");
-            }
-            else if (partList.get(1).equals("청송군") && partList.get(2).equals("부동면")) {
+            } else if (partList.get(1).equals("청송군") && partList.get(2).equals("부동면")) {
                 partList.set(2, "주왕산면");
-            }
-            else if (partList.get(1).equals("군위군")) {
+            } else if (partList.get(1).equals("군위군")) {
                 partList.set(0, "대구광역시");
             }
         }
@@ -98,7 +88,7 @@ public class AddressUtils {
                 partList.set(2, "덕산읍");
             }
         }
-        
+
         if (partList.get(0).equals("전라북도")) {
             if (partList.get(1).equals("전주시") && partList.get(2).equals("덕진구") && partList.get(3).equals("동산동")) {
                 partList.set(3, "여의동");
@@ -108,8 +98,7 @@ public class AddressUtils {
         if (partList.get(0).equals("전라남도")) {
             if (partList.get(1).equals("화순군") && partList.get(2).equals("북면")) {
                 partList.set(2, "백아면");
-            }
-            else if (partList.get(1).equals("화순군") && partList.get(2).equals("남면")) {
+            } else if (partList.get(1).equals("화순군") && partList.get(2).equals("남면")) {
                 partList.set(2, "사평면");
             }
         }
@@ -123,11 +112,9 @@ public class AddressUtils {
         if (partList.get(0).equals("대구광역시")) {
             if (partList.get(1).equals("달성군") && partList.get(2).equals("현풍면")) {
                 partList.set(2, "현풍읍");
-            }
-            else if (partList.get(1).equals("달성군") && partList.get(2).equals("옥포면")) {
+            } else if (partList.get(1).equals("달성군") && partList.get(2).equals("옥포면")) {
                 partList.set(2, "옥포읍");
-            }
-            else if (partList.get(1).equals("군위군") && partList.get(2).equals("고로면")) {
+            } else if (partList.get(1).equals("군위군") && partList.get(2).equals("고로면")) {
                 partList.set(2, "삼국유사면");
             }
         }
