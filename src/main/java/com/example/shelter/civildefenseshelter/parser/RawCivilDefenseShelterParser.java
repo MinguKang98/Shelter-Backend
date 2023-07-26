@@ -1,7 +1,7 @@
 package com.example.shelter.civildefenseshelter.parser;
 
 import com.example.shelter.civildefenseshelter.dto.RawCivilDefenseShelter;
-import com.example.shelter.util.TransCoord;
+import com.example.shelter.util.GpsUtils;
 import com.opencsv.CSVReader;
 import lombok.extern.slf4j.Slf4j;
 import org.locationtech.proj4j.ProjCoordinate;
@@ -43,7 +43,7 @@ public class RawCivilDefenseShelterParser {
                 String strY = areaInfo[28];
 
                 if ("EPSG:5174".equals(coordType)) {
-                    ProjCoordinate coordinate = TransCoord.transform(strX, strY);
+                    ProjCoordinate coordinate = GpsUtils.transform5174To4326(strX, strY);
                     latitude = coordinate.y;
                     longitude = coordinate.x;
                 } else {
