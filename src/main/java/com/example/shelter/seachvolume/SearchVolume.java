@@ -56,6 +56,10 @@ public class SearchVolume {
         this.shelterType = shelterType;
     }
 
+    public void updateVolume() {
+        this.volume += 1;
+    }
+
     public void updateDeleted(boolean deleted) {
         isDeleted = deleted;
     }

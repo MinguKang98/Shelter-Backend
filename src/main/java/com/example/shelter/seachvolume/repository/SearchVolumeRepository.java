@@ -44,7 +44,7 @@ public interface SearchVolumeRepository extends JpaRepository<SearchVolume, Long
 
     @Query("""
             select new com.example.shelter.seachvolume.dto.RegionVolumeDto
-            (sd.name, s.shelterType, count(s))
+            (sd.name, s.shelterType, sum(s.volume))
             from SearchVolume s
             left join Dong d on s.dong = d
             left join Sigungu sgg on d.sigungu = sgg
@@ -58,7 +58,7 @@ public interface SearchVolumeRepository extends JpaRepository<SearchVolume, Long
 
     @Query("""
             select new com.example.shelter.seachvolume.dto.RegionVolumeDto
-            (sgg.name, s.shelterType, count(s))
+            (sgg.name, s.shelterType, sum(s.volume))
             from SearchVolume s
             left join Dong d on s.dong = d
             left join Sigungu sgg on d.sigungu = sgg
