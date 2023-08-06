@@ -18,6 +18,7 @@ import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
 import java.util.ArrayList;
+import java.util.Comparator;
 import java.util.List;
 
 @Slf4j
@@ -42,6 +43,7 @@ public class YnaCrawler implements Crawler {
             for (String newsType : NEWS_TYPES) {
                 newsList.addAll(getNewsList(driver, newsType, start, end));
             }
+            newsList.sort(Comparator.comparing(News::getPublishTime));
             if (!newsList.isEmpty()) {
                 newsRepository.saveAll(newsList);
             }
