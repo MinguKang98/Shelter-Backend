@@ -28,6 +28,7 @@ public class News extends BaseEntity {
     @Column
     private String title;
 
+    @Lob
     @Column
     private String content;
 
