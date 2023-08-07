@@ -2,6 +2,7 @@ package com.example.shelter.news.controller;
 
 import com.example.shelter.exception.notfound.NewsNotFoundException;
 import com.example.shelter.news.News;
+import com.example.shelter.news.crawler.YnaCrawler;
 import com.example.shelter.news.service.NewsService;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -33,6 +34,9 @@ class NewsControllerTest {
 
     @MockBean
     NewsService newsService;
+
+    @MockBean
+    YnaCrawler ynaCrawler;
 
     @Test
     public void getNews_존재하는_뉴스_테스트() throws Exception {
@@ -104,6 +108,18 @@ class NewsControllerTest {
                 .andExpect(jsonPath("$.size").value(size))
                 .andExpect(jsonPath("$.hasNext").value(result.hasNext()))
                 .andExpect(jsonPath("$.hasPrevious").value(result.hasPrevious()));
+    }
+
+    @Test
+    public void getNewsPage_잘못된_쿼리값_테스트() throws Exception {
+        //given
+        int page = 0;
+
+        ///when
+        //then
+        mockMvc.perform(get("/api/news").param("page", String.valueOf(page)))
+                .andExpect(status().isBadRequest())
+                .andExpect(jsonPath("$.code").value("000"));
     }
 
 
