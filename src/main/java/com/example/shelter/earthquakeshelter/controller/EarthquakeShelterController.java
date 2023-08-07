@@ -37,7 +37,7 @@ public class EarthquakeShelterController {
 
     @GetMapping("/api/shelters/earthquake")
     public ResponseEntity<ShelterPageDto> getEarthquakeSheltersByDong(@RequestParam("dong_id") Long dongId,
-                                                                   @RequestParam("page") @Positive int page) {
+                                                                      @RequestParam("page") @Positive int page) {
 
         PageRequest pageRequest = PageRequest.of(page - 1, ShelterVariable.PAGE_SIZE);
         Dong dong = dongService.findById(dongId);
@@ -46,11 +46,13 @@ public class EarthquakeShelterController {
     }
 
     @GetMapping("/api/shelters/earthquake/current")
-    public ResponseEntity<ShelterListDto> getEarthquakeSheltersByCurrent(@RequestParam("lat") double latitude,
-                                                                      @RequestParam("lon") double longitude) {
+    public ResponseEntity<ShelterListDto> getEarthquakeSheltersByCurrent(
+            @RequestParam("lat") double latitude,
+            @RequestParam("lon") double longitude,
+            @RequestParam(value = "radius", defaultValue = "2000") @Positive int radius) {
 
         List<EarthquakeShelter> earthquakeShelters = earthquakeShelterService
-                .findAllByCurrent(latitude, longitude, ShelterVariable.DEFAULT_RADIUS);
+                .findAllByCurrent(latitude, longitude, radius);
         return ResponseEntity.ok(ShelterListDto.of(earthquakeShelters));
     }
 
