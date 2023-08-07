@@ -50,8 +50,8 @@ public class EarthquakeShelterConverter {
                                 return EarthquakeShelter.builder()
                                         .name(res.getVtAcmdfcltyNm())
                                         .address(address)
-                                        .latitude(Double.parseDouble(String.format("%.6f", res.getXCord())))
-                                        .longitude(Double.parseDouble(String.format("%.6f", res.getYCord())))
+                                        .latitude(Double.parseDouble(String.format("%.6f", res.getYCord())))
+                                        .longitude(Double.parseDouble(String.format("%.6f", res.getXCord())))
                                         .dong(dong)
                                         .area(res.getFcltyAr())
                                         .build();
