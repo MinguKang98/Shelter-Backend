@@ -38,3 +38,6 @@ out/
 
 ### csv files ###
 src/main/resources/csv/*.csv
+
+### chromedriver ###
+src/main/resources/driver/*.exe
