@@ -1,6 +1,9 @@
 package com.example.shelter.shelter.dto;
 
+import com.example.shelter.earthquakeshelter.EarthquakeShelter;
+import com.example.shelter.earthquakeshelter.dto.EarthquakeShelterDto;
 import com.example.shelter.shelter.Shelter;
+import com.example.shelter.shelter.ShelterVariable;
 import com.example.shelter.tsunamishelter.TsunamiShelter;
 import com.example.shelter.tsunamishelter.dto.TsunamiShelterDto;
 import lombok.Getter;
@@ -32,14 +35,14 @@ public class ShelterPageDto {
         this.totalCount = page.getTotalElements();
         this.totalPage = page.getTotalPages();
         this.page = page.getNumber() + 1;
-        this.size = page.getNumberOfElements();
+        this.size = ShelterVariable.PAGE_SIZE;
         this.hasNext = page.hasNext();
         this.hasPrevious = page.hasPrevious();
         this.content = page.getContent().stream()
                 .map(s ->
                         switch (s.getShelterType()) {
                             case TSUNAMI -> TsunamiShelterDto.of((TsunamiShelter) s);
-                            case EARTHQUAKE -> null;
+                            case EARTHQUAKE -> EarthquakeShelterDto.of((EarthquakeShelter) s);
                             case CIVIL_DEFENCE -> null;
                         }
                 )
