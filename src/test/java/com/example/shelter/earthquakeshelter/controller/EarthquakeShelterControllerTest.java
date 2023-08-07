@@ -153,7 +153,7 @@ class EarthquakeShelterControllerTest {
     }
 
     @Test
-    public void getEarthquakeSheltersByCurrent_테스트() throws Exception {
+    public void getEarthquakeSheltersByCurrent_기본_반경_테스트() throws Exception {
         //given
         int total = 30;
         double lat = 37.123000;
@@ -179,6 +179,39 @@ class EarthquakeShelterControllerTest {
         mockMvc.perform((get("/api/shelters/earthquake/current")
                         .param("lat", String.valueOf(lat))
                         .param("lon", String.valueOf(lon))))
+                .andExpect(status().isOk())
+                .andExpect(jsonPath("$.totalCount").value(total));
+    }
+
+    @Test
+    public void getEarthquakeSheltersByCurrent_반경_입력_테스트() throws Exception {
+        //given
+        int radius = 200;
+        int total = 30;
+        double lat = 37.123000;
+        double lon = 127.123000;
+        List<EarthquakeShelter> result = new ArrayList<>();
+        for (int i = total; i > 0; i--) {
+            EarthquakeShelter shelter = EarthquakeShelter.builder()
+                    .id((long) i)
+                    .name("대피소" + i)
+                    .address(new Address("서울시", "동대문구", "전농동", "전일중학교"))
+                    .latitude(37.123456)
+                    .longitude(127.123456)
+                    .dong(null)
+                    .area(1400)
+                    .build();
+            result.add(shelter);
+        }
+        when(earthquakeShelterService.findAllByCurrent(lat, lon, radius))
+                .thenReturn(result);
+
+        ///when
+        //then
+        mockMvc.perform((get("/api/shelters/earthquake/current")
+                        .param("lat", String.valueOf(lat))
+                        .param("lon", String.valueOf(lon))
+                        .param("radius", String.valueOf(radius))))
                 .andExpect(status().isOk())
                 .andExpect(jsonPath("$.totalCount").value(total));
     }
