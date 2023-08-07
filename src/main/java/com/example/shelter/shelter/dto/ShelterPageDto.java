@@ -1,4 +1,4 @@
-package com.example.shelter.common.dto;
+package com.example.shelter.shelter.dto;
 
 import com.example.shelter.shelter.Shelter;
 import com.example.shelter.tsunamishelter.TsunamiShelter;
