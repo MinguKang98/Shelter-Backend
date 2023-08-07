@@ -162,7 +162,7 @@ class TsunamiShelterControllerTest {
     }
 
     @Test
-    public void getTsunamiSheltersByCurrent_테스트() throws Exception {
+    public void getTsunamiSheltersByCurrent_기본_반경_테스트() throws Exception {
         //given
         int total = 30;
         double lat = 37.123000;
@@ -191,6 +191,42 @@ class TsunamiShelterControllerTest {
         mockMvc.perform((get("/api/shelters/tsunami/current")
                         .param("lat", String.valueOf(lat))
                         .param("lon", String.valueOf(lon))))
+                .andExpect(status().isOk())
+                .andExpect(jsonPath("$.totalCount").value(total));
+    }
+
+    @Test
+    public void getTsunamiSheltersByCurrent_반경_입력_테스트() throws Exception {
+        //given
+        int radius = 200;
+        int total = 30;
+        double lat = 37.123000;
+        double lon = 127.123000;
+        List<TsunamiShelter> result = new ArrayList<>();
+        for (int i = total; i > 0; i--) {
+            TsunamiShelter shelter = TsunamiShelter.builder()
+                    .id((long) i)
+                    .name("대피소" + i)
+                    .address(new Address("서울시", "동대문구", "전농동", "전일중학교"))
+                    .latitude(37.123456)
+                    .longitude(127.123456)
+                    .dong(null)
+                    .capacity(100)
+                    .height(10)
+                    .length(10)
+                    .type("학교")
+                    .build();
+            result.add(shelter);
+        }
+        when(tsunamiShelterService.findAllByCurrent(lat, lon, radius))
+                .thenReturn(result);
+
+        ///when
+        //then
+        mockMvc.perform((get("/api/shelters/tsunami/current")
+                        .param("lat", String.valueOf(lat))
+                        .param("lon", String.valueOf(lon))
+                        .param("radius", String.valueOf(radius))))
                 .andExpect(status().isOk())
                 .andExpect(jsonPath("$.totalCount").value(total));
     }
