@@ -46,11 +46,13 @@ public class TsunamiShelterController {
     }
 
     @GetMapping("/api/shelters/tsunami/current")
-    public ResponseEntity<ShelterListDto> getTsunamiSheltersByCurrent(@RequestParam("lat") double latitude,
-                                                                      @RequestParam("lon") double longitude) {
+    public ResponseEntity<ShelterListDto> getTsunamiSheltersByCurrent(
+            @RequestParam("lat") double latitude,
+            @RequestParam("lon") double longitude,
+            @RequestParam(value = "radius", defaultValue = "2000") int radius) {
 
         List<TsunamiShelter> tsunamiShelters = tsunamiShelterService
-                .findAllByCurrent(latitude, longitude, ShelterVariable.DEFAULT_RADIUS);
+                .findAllByCurrent(latitude, longitude, radius);
         return ResponseEntity.ok(ShelterListDto.of(tsunamiShelters));
     }
 
