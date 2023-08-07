@@ -4,6 +4,7 @@ import com.example.shelter.dong.Dong;
 import com.example.shelter.dong.DongService;
 import com.example.shelter.exception.notfound.DongNotFoundException;
 import com.example.shelter.exception.notfound.TsunamiShelterNotFoundException;
+import com.example.shelter.shelter.ShelterVariable;
 import com.example.shelter.shelter.address.Address;
 import com.example.shelter.tsunamishelter.TsunamiShelter;
 import com.example.shelter.tsunamishelter.service.TsunamiShelterService;
@@ -92,9 +93,8 @@ class TsunamiShelterControllerTest {
                 .sigungu(null)
                 .build();
         int page = 1;
-        int size = 8;
         long total = 100;
-        PageRequest pageRequest = PageRequest.of(page - 1, size);
+        PageRequest pageRequest = PageRequest.of(page - 1, ShelterVariable.PAGE_SIZE);
         List<TsunamiShelter> content = new ArrayList<>();
         for (int i = 8; i > 0; i--) {
             TsunamiShelter shelter = TsunamiShelter.builder()
@@ -124,7 +124,7 @@ class TsunamiShelterControllerTest {
                 .andExpect(jsonPath("$.totalCount").value(result.getTotalElements()))
                 .andExpect(jsonPath("$.totalPage").value(result.getTotalPages()))
                 .andExpect(jsonPath("$.page").value(page))
-                .andExpect(jsonPath("$.size").value(size))
+                .andExpect(jsonPath("$.size").value(ShelterVariable.PAGE_SIZE))
                 .andExpect(jsonPath("$.hasNext").value(result.hasNext()))
                 .andExpect(jsonPath("$.hasPrevious").value(result.hasPrevious()));
     }
@@ -146,7 +146,7 @@ class TsunamiShelterControllerTest {
     }
 
     @Test
-    public void getTsunamiSheltersByDong_페이지_예외_테스트() throws Exception {
+    public void getTsunamiSheltersByDong_잘못된_쿼리값_테스트() throws Exception {
         //given
         Long id = 1L;
         int page = 0;
@@ -157,7 +157,8 @@ class TsunamiShelterControllerTest {
         mockMvc.perform((get("/api/shelters/tsunami")
                         .param("dong_id", id.toString())
                         .param("page", String.valueOf(page))))
-                .andExpect(status().isBadRequest());
+                .andExpect(status().isBadRequest())
+                .andExpect(jsonPath("$.code").value("000"));
     }
 
     @Test
@@ -182,7 +183,8 @@ class TsunamiShelterControllerTest {
                     .build();
             result.add(shelter);
         }
-        when(tsunamiShelterService.findAllByCurrent(lat, lon, 500)).thenReturn(result);
+        when(tsunamiShelterService.findAllByCurrent(lat, lon, ShelterVariable.DEFAULT_RADIUS))
+                .thenReturn(result);
 
         ///when
         //then
