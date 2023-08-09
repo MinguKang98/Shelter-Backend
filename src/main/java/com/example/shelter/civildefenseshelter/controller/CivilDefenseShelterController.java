@@ -1,5 +1,6 @@
-package com.example.shelter.civildefenseshelter;
+package com.example.shelter.civildefenseshelter.controller;
 
+import com.example.shelter.civildefenseshelter.CivilDefenseShelter;
 import com.example.shelter.civildefenseshelter.dto.CivilDefenseShelterDto;
 import com.example.shelter.civildefenseshelter.service.CivilDefenseShelterService;
 import com.example.shelter.dong.Dong;
@@ -28,13 +29,13 @@ public class CivilDefenseShelterController {
     private final CivilDefenseShelterService civilDefenseShelterService;
     private final DongService dongService;
 
-    @GetMapping("/api/shelters/civilDefense/{id}")
+    @GetMapping("/api/shelters/civil-defense/{id}")
     public ResponseEntity<CivilDefenseShelterDto> getCivilDefenseShelter(@PathVariable("id") Long id) {
         CivilDefenseShelter civilDefenseShelter = civilDefenseShelterService.findById(id);
         return ResponseEntity.ok(CivilDefenseShelterDto.of(civilDefenseShelter));
     }
 
-    @GetMapping("/api/shelters/civilDefense")
+    @GetMapping("/api/shelters/civil-defense")
     public ResponseEntity<ShelterPageDto> getCivilDefenseSheltersByDong(@RequestParam("dong_id") Long dongId,
                                                                       @RequestParam("page") @Positive int page) {
 
@@ -44,7 +45,7 @@ public class CivilDefenseShelterController {
         return ResponseEntity.ok(ShelterPageDto.of(civilDefenseShelters));
     }
 
-    @GetMapping("/api/shelters/civilDefense/current")
+    @GetMapping("/api/shelters/civil-defense/current")
     public ResponseEntity<ShelterListDto> getCivilDefenseSheltersByCurrent(
             @RequestParam("lat") double latitude,
             @RequestParam("lon") double longitude,
