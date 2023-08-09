@@ -1,5 +1,7 @@
 package com.example.shelter.shelter.dto;
 
+import com.example.shelter.civildefenseshelter.CivilDefenseShelter;
+import com.example.shelter.civildefenseshelter.dto.CivilDefenseShelterDto;
 import com.example.shelter.earthquakeshelter.EarthquakeShelter;
 import com.example.shelter.earthquakeshelter.dto.EarthquakeShelterDto;
 import com.example.shelter.shelter.Shelter;
@@ -26,7 +28,7 @@ public class ShelterListDto {
                         switch (s.getShelterType()) {
                             case TSUNAMI -> TsunamiShelterDto.of((TsunamiShelter) s);
                             case EARTHQUAKE -> EarthquakeShelterDto.of((EarthquakeShelter) s);
-                            case CIVIL_DEFENCE -> null;
+                            case CIVIL_DEFENCE -> CivilDefenseShelterDto.of((CivilDefenseShelter) s);
                         }
                 )
                 .collect(Collectors.toList());
