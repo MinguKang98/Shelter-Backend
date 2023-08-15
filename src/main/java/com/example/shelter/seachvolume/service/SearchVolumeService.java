@@ -3,7 +3,7 @@ package com.example.shelter.seachvolume.service;
 import com.example.shelter.dong.Dong;
 import com.example.shelter.seachvolume.SearchVolume;
 import com.example.shelter.seachvolume.dto.RegionVolumeDto;
-import com.example.shelter.seachvolume.dto.ShelterVolumeDto;
+import com.example.shelter.seachvolume.dto.ShelterTypeVolumeDto;
 import com.example.shelter.seachvolume.repository.SearchVolumeRepository;
 import com.example.shelter.shelter.ShelterType;
 import com.example.shelter.sido.Sido;
@@ -12,9 +12,7 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.time.LocalDate;
-import java.util.HashMap;
 import java.util.List;
-import java.util.Map;
 
 @Service
 @RequiredArgsConstructor
@@ -41,50 +39,21 @@ public class SearchVolumeService {
         return searchVolumeRepository.getTotalVolumeByDateRangeNotDeleted(from, to);
     }
 
-    public Map<String, ShelterVolumeDto> getSidoVolumeMap(LocalDate date) {
-        return changeToRegionVolumeMap(searchVolumeRepository.countSidoByDateNotDeleted(date));
+    public ShelterTypeVolumeDto getSidoVolumeMap(LocalDate date) {
+        List<RegionVolumeDto> regionVolumeDtoList = searchVolumeRepository.countSidoByDateNotDeleted(date);
+        return ShelterTypeVolumeDto.ofRegionVolume(regionVolumeDtoList);
     }
 
-    public Map<String, ShelterVolumeDto> getSigunguVolumeMap(Sido sido, LocalDate date) {
-        return changeToRegionVolumeMap(searchVolumeRepository.countSigunguBySidoAndDateNotDeleted(sido, date));
+    public ShelterTypeVolumeDto getSigunguVolumeMap(Sido sido, LocalDate date) {
+        List<RegionVolumeDto> regionVolumeDtoList = searchVolumeRepository
+                .countSigunguBySidoAndDateNotDeleted(sido, date);
+        return ShelterTypeVolumeDto.ofRegionVolume(regionVolumeDtoList);
     }
 
-//    public Map<LocalDate, ShelterVolumeDto> getDateVolumeMap(Dong dong, ShelterType type,
-//                                                             LocalDate from, LocalDate to) {
-//        return changeToDateVolumeMap(searchVolumeRepository
-//                .findAllByDongAndTypeAndDateRangeNotDeleted(dong, type, from, to));
-//    }
-
-
-
-    private Map<String, ShelterVolumeDto> changeToRegionVolumeMap(List<RegionVolumeDto> dtoList) {
-        Map<String, ShelterVolumeDto> map = new HashMap<>();
-        for (RegionVolumeDto volumeDto : dtoList) {
-            if (!map.containsKey(volumeDto.getName())) {
-                map.put(volumeDto.getName(), new ShelterVolumeDto());
-            }
-            switch (volumeDto.getShelterType()) {
-                case TSUNAMI -> map.get(volumeDto.getName()).setTsunami(volumeDto.getCount());
-                case EARTHQUAKE -> map.get(volumeDto.getName()).setEarthquake(volumeDto.getCount());
-                case CIVIL_DEFENCE -> map.get(volumeDto.getName()).setCivilDefense(volumeDto.getCount());
-            }
-        }
-        return map;
-    }
-
-    private Map<LocalDate, ShelterVolumeDto> changeToDateVolumeMap(List<SearchVolume> list) {
-        Map<LocalDate, ShelterVolumeDto> map = new HashMap<>();
-        for (SearchVolume volume : list) {
-            if (!map.containsKey(volume.getCreatedDate())) {
-                map.put(volume.getCreatedDate(), new ShelterVolumeDto());
-            }
-            switch (volume.getShelterType()) {
-                case TSUNAMI -> map.get(volume.getCreatedDate()).setTsunami(volume.getVolume());
-                case EARTHQUAKE -> map.get(volume.getCreatedDate()).setEarthquake(volume.getVolume());
-                case CIVIL_DEFENCE -> map.get(volume.getCreatedDate()).setCivilDefense(volume.getVolume());
-            }
-        }
-        return map;
+    public ShelterTypeVolumeDto getDateVolumeMap(Dong dong, LocalDate from, LocalDate to) {
+        List<SearchVolume> searchVolumeList = searchVolumeRepository
+                .findAllByDongAndDateRangeNotDeleted(dong, from, to);
+        return ShelterTypeVolumeDto.ofSearchVolume(searchVolumeList);
     }
 
 }
