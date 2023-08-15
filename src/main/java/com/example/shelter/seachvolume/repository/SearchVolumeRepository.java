@@ -32,15 +32,16 @@ public interface SearchVolumeRepository extends JpaRepository<SearchVolume, Long
             "where s.createdDate between :from and :to and s.isDeleted = false")
     int getTotalVolumeByDateRangeNotDeleted(@Param("from") LocalDate from, @Param("to") LocalDate to);
 
-    @Query("select s from SearchVolume s " +
-            "where s.dong = :dong and " +
-            "s.shelterType = :type and " +
-            "s.createdDate between :from and :to and " +
-            "s.isDeleted = false ")
-    List<SearchVolume> findAllByDongAndTypeAndDateRangeNotDeleted(@Param("dong") Dong dong,
-                                                                  @Param("type") ShelterType type,
-                                                                  @Param("from") LocalDate from,
-                                                                  @Param("to") LocalDate to);
+    @Query("""
+            select s from SearchVolume s
+            where s.dong = :dong and
+            s.createdDate between :from and :to and
+            s.isDeleted = false
+            order by s.shelterType, s.createdDate
+            """)
+    List<SearchVolume> findAllByDongAndDateRangeNotDeleted(@Param("dong") Dong dong,
+                                                            @Param("from") LocalDate from,
+                                                            @Param("to") LocalDate to);
 
     @Query("""
             select new com.example.shelter.seachvolume.dto.RegionVolumeDto
