@@ -8,13 +8,13 @@ import lombok.NoArgsConstructor;
 @NoArgsConstructor
 public class RegionVolumeDto {
 
-    private String name;
     private ShelterType shelterType;
+    private String name;
     private Long count;
 
-    public RegionVolumeDto(String name, ShelterType shelterType, Long count) {
-        this.name = name;
+    public RegionVolumeDto(ShelterType shelterType, String name, Long count) {
         this.shelterType = shelterType;
+        this.name = name;
         this.count = count;
     }
 

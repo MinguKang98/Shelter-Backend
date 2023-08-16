@@ -3,15 +3,19 @@ package com.example.shelter.seachvolume.service;
 import com.example.shelter.dong.Dong;
 import com.example.shelter.seachvolume.SearchVolume;
 import com.example.shelter.seachvolume.dto.RegionVolumeDto;
-import com.example.shelter.seachvolume.dto.ShelterVolumeDto;
+import com.example.shelter.seachvolume.dto.ShelterTypeVolumeDto;
 import com.example.shelter.seachvolume.repository.SearchVolumeRepository;
 import com.example.shelter.shelter.ShelterType;
 import com.example.shelter.sido.Sido;
+import com.example.shelter.sido.SidoRepository;
+import com.example.shelter.sigungu.Sigungu;
+import com.example.shelter.sigungu.SigunguRepository;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.junit.jupiter.MockitoExtension;
+import org.springframework.data.domain.Sort;
 
 import java.time.LocalDate;
 import java.util.ArrayList;
@@ -28,6 +32,12 @@ class SearchVolumeServiceTest {
 
     @Mock
     SearchVolumeRepository searchVolumeRepository;
+
+    @Mock
+    SidoRepository sidoRepository;
+
+    @Mock
+    SigunguRepository sigunguRepository;
 
     @InjectMocks
     SearchVolumeService searchVolumeService;
@@ -111,31 +121,39 @@ class SearchVolumeServiceTest {
     }
 
     @Test
-    public void getSidoSVolumeMap_테스트() {
+    public void getSidoVolumeMap_테스트() {
         //given
         LocalDate now = LocalDate.now();
-        List<RegionVolumeDto> regionVolumeDtoList = List.of(
-                new RegionVolumeDto("서울특별시", ShelterType.TSUNAMI, 10L),
-                new RegionVolumeDto("서울특별시", ShelterType.EARTHQUAKE, 10L),
-                new RegionVolumeDto("서울특별시", ShelterType.CIVIL_DEFENCE, 10L),
-                new RegionVolumeDto("부산광역시", ShelterType.TSUNAMI, 10L),
-                new RegionVolumeDto("부산광역시", ShelterType.EARTHQUAKE, 10L),
-                new RegionVolumeDto("부산광역시", ShelterType.CIVIL_DEFENCE, 10L)
+        List<Sido> sidos = List.of(
+                new Sido(1L, "서울특별시"),
+                new Sido(2L, "인천광역시"),
+                new Sido(3L, "경기도"),
+                new Sido(4L, "부산광역시")
         );
+        List<RegionVolumeDto> regionVolumeDtoList = List.of(
+                new RegionVolumeDto(ShelterType.TSUNAMI, "서울특별시", 10L),
+                new RegionVolumeDto(ShelterType.TSUNAMI, "부산광역시", 20L),
+                new RegionVolumeDto(ShelterType.EARTHQUAKE, "서울특별시", 30L),
+                new RegionVolumeDto(ShelterType.EARTHQUAKE, "부산광역시", 40L),
+                new RegionVolumeDto(ShelterType.CIVIL_DEFENCE, "서울특별시", 50L),
+                new RegionVolumeDto(ShelterType.CIVIL_DEFENCE, "부산광역시", 60L)
+        );
+        when(sidoRepository.findAllNotDeleted()).thenReturn(sidos);
         when(searchVolumeRepository.countSidoByDateNotDeleted(now)).thenReturn(regionVolumeDtoList);
 
         ///when
-        Map<String, ShelterVolumeDto> sidoVolumeMap = searchVolumeService.getSidoVolumeMap(now);
+        ShelterTypeVolumeDto shelterTypeVolumeDto = searchVolumeService.getSidoVolumeMap(now);
 
         //then
-        assertThat(sidoVolumeMap.containsKey("서울특별시")).isTrue();
-        assertThat(sidoVolumeMap.get("서울특별시").getTsunami()).isEqualTo(10L);
-        assertThat(sidoVolumeMap.get("서울특별시").getEarthquake()).isEqualTo(10L);
-        assertThat(sidoVolumeMap.get("서울특별시").getCivilDefense()).isEqualTo(10L);
-        assertThat(sidoVolumeMap.containsKey("부산광역시")).isTrue();
-        assertThat(sidoVolumeMap.get("부산광역시").getTsunami()).isEqualTo(10L);
-        assertThat(sidoVolumeMap.get("부산광역시").getEarthquake()).isEqualTo(10L);
-        assertThat(sidoVolumeMap.get("부산광역시").getCivilDefense()).isEqualTo(10L);
+        assertThat(shelterTypeVolumeDto.getTsunami().size()).isEqualTo(4);
+        assertThat(shelterTypeVolumeDto.getEarthquake().size()).isEqualTo(4);
+        assertThat(shelterTypeVolumeDto.getCivilDefense().size()).isEqualTo(4);
+        assertThat(shelterTypeVolumeDto.getTsunami().get("서울특별시")).isEqualTo(10L);
+        assertThat(shelterTypeVolumeDto.getTsunami().get("부산광역시")).isEqualTo(20L);
+        assertThat(shelterTypeVolumeDto.getEarthquake().get("서울특별시")).isEqualTo(30L);
+        assertThat(shelterTypeVolumeDto.getEarthquake().get("부산광역시")).isEqualTo(40L);
+        assertThat(shelterTypeVolumeDto.getCivilDefense().get("서울특별시")).isEqualTo(50L);
+        assertThat(shelterTypeVolumeDto.getCivilDefense().get("부산광역시")).isEqualTo(60L);
         verify(searchVolumeRepository, times(1)).countSidoByDateNotDeleted(now);
     }
 
@@ -143,58 +161,87 @@ class SearchVolumeServiceTest {
     public void getSigunguVolumeMap_테스트(@Mock Sido sido) {
         //given
         LocalDate now = LocalDate.now();
-        List<RegionVolumeDto> regionVolumeDtoList = List.of(
-                new RegionVolumeDto("강동구", ShelterType.TSUNAMI, 10L),
-                new RegionVolumeDto("강동구", ShelterType.EARTHQUAKE, 10L),
-                new RegionVolumeDto("강동구", ShelterType.CIVIL_DEFENCE, 10L),
-                new RegionVolumeDto("동대문구", ShelterType.TSUNAMI, 10L),
-                new RegionVolumeDto("동대문구", ShelterType.EARTHQUAKE, 10L),
-                new RegionVolumeDto("동대문구", ShelterType.CIVIL_DEFENCE, 10L)
+        List<Sigungu> sigungus = List.of(
+                new Sigungu(1L, "강동구", sido),
+                new Sigungu(2L, "강남구", sido),
+                new Sigungu(3L, "동대문구", sido),
+                new Sigungu(4L, "중랑구", sido)
         );
+        List<RegionVolumeDto> regionVolumeDtoList = List.of(
+                new RegionVolumeDto(ShelterType.TSUNAMI, "강동구", 10L),
+                new RegionVolumeDto(ShelterType.TSUNAMI, "동대문구", 20L),
+                new RegionVolumeDto(ShelterType.EARTHQUAKE, "강동구", 30L),
+                new RegionVolumeDto(ShelterType.EARTHQUAKE, "동대문구", 40L),
+                new RegionVolumeDto(ShelterType.CIVIL_DEFENCE, "강동구", 50L),
+                new RegionVolumeDto(ShelterType.CIVIL_DEFENCE, "동대문구", 60L)
+        );
+        when(sigunguRepository.findAllBySidoNotDeleted(sido, Sort.by(Sort.Direction.ASC, "name")))
+                .thenReturn(sigungus);
         when(searchVolumeRepository.countSigunguBySidoAndDateNotDeleted(sido, now))
                 .thenReturn(regionVolumeDtoList);
 
         ///when
-        Map<String, ShelterVolumeDto> sidoVolumeMap = searchVolumeService.getSigunguVolumeMap(sido, now);
+        ShelterTypeVolumeDto shelterTypeVolumeDto = searchVolumeService.getSigunguVolumeMap(sido, now);
 
         //then
-        assertThat(sidoVolumeMap.containsKey("강동구")).isTrue();
-        assertThat(sidoVolumeMap.get("강동구").getTsunami()).isEqualTo(10L);
-        assertThat(sidoVolumeMap.get("강동구").getEarthquake()).isEqualTo(10L);
-        assertThat(sidoVolumeMap.get("강동구").getCivilDefense()).isEqualTo(10L);
-        assertThat(sidoVolumeMap.containsKey("동대문구")).isTrue();
-        assertThat(sidoVolumeMap.get("동대문구").getTsunami()).isEqualTo(10L);
-        assertThat(sidoVolumeMap.get("동대문구").getEarthquake()).isEqualTo(10L);
-        assertThat(sidoVolumeMap.get("동대문구").getCivilDefense()).isEqualTo(10L);
+        assertThat(shelterTypeVolumeDto.getTsunami().size()).isEqualTo(4);
+        assertThat(shelterTypeVolumeDto.getEarthquake().size()).isEqualTo(4);
+        assertThat(shelterTypeVolumeDto.getCivilDefense().size()).isEqualTo(4);
+        assertThat(shelterTypeVolumeDto.getTsunami().get("강동구")).isEqualTo(10L);
+        assertThat(shelterTypeVolumeDto.getTsunami().get("동대문구")).isEqualTo(20L);
+        assertThat(shelterTypeVolumeDto.getEarthquake().get("강동구")).isEqualTo(30L);
+        assertThat(shelterTypeVolumeDto.getEarthquake().get("동대문구")).isEqualTo(40L);
+        assertThat(shelterTypeVolumeDto.getCivilDefense().get("강동구")).isEqualTo(50L);
+        assertThat(shelterTypeVolumeDto.getCivilDefense().get("동대문구")).isEqualTo(60L);
         verify(searchVolumeRepository, times(1))
                 .countSigunguBySidoAndDateNotDeleted(sido, now);
     }
 
     @Test
     public void getDateVolumeMap_테스트(@Mock Dong dong) {
-//        //given
-//        LocalDate to = LocalDate.now();
-//        LocalDate from = LocalDate.now().minusDays(7);
-//        List<SearchVolume> searchVolumeList = new ArrayList<>();
-//        for (int i = 0; i < 8; i++) {
-//            SearchVolume searchVolume = SearchVolume.builder()
-//                    .createdDate(LocalDate.now().minusDays(i))
-//                    .volume(10)
-//                    .shelterType(ShelterType.TSUNAMI)
-//                    .dong(dong)
-//                    .build();
-//            searchVolumeList.add(searchVolume);
-//        }
-//
-//        when(searchVolumeRepository
-//                .findAllByDongAndTypeAndDateRangeNotDeleted(dong, ShelterType.TSUNAMI, from, to))
-//                .thenReturn(searchVolumeList);
-//
-//        ///when
-//        Map<LocalDate, ShelterVolumeDto> dateVolumeMap = searchVolumeService
-//                .getDateVolumeMap(dong, ShelterType.TSUNAMI, from, to);
-//
-//        //then
+        //given
+        LocalDate to = LocalDate.now();
+        LocalDate from = LocalDate.now().minusDays(7);
+        List<SearchVolume> searchVolumeList = new ArrayList<>();
+        for (int i = 3; i >= 0; i--) {
+            SearchVolume searchVolume1 = SearchVolume.builder()
+                    .createdDate(LocalDate.now().minusDays(i))
+                    .volume(10)
+                    .shelterType(ShelterType.TSUNAMI)
+                    .dong(dong)
+                    .build();
+            searchVolumeList.add(searchVolume1);
+
+            SearchVolume searchVolume2 = SearchVolume.builder()
+                    .createdDate(LocalDate.now().minusDays(i))
+                    .volume(20)
+                    .shelterType(ShelterType.EARTHQUAKE)
+                    .dong(dong)
+                    .build();
+            searchVolumeList.add(searchVolume2);
+
+            SearchVolume searchVolume3 = SearchVolume.builder()
+                    .createdDate(LocalDate.now().minusDays(i))
+                    .volume(30)
+                    .shelterType(ShelterType.CIVIL_DEFENCE)
+                    .dong(dong)
+                    .build();
+            searchVolumeList.add(searchVolume3);
+        }
+
+        when(searchVolumeRepository
+                .findAllByDongAndDateRangeNotDeleted(dong, from, to))
+                .thenReturn(searchVolumeList);
+
+        ///when
+        ShelterTypeVolumeDto shelterTypeVolumeDto = searchVolumeService.getDateVolumeMap(dong, from, to);
+
+        //then
+        assertThat(shelterTypeVolumeDto.getTsunami().size()).isEqualTo(8);
+        assertThat(shelterTypeVolumeDto.getEarthquake().size()).isEqualTo(8);
+        assertThat(shelterTypeVolumeDto.getCivilDefense().size()).isEqualTo(8);
+        verify(searchVolumeRepository, times(1))
+                .findAllByDongAndDateRangeNotDeleted(dong, from, to);
     }
 
 }

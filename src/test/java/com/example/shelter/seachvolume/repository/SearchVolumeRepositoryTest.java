@@ -363,7 +363,7 @@ class SearchVolumeRepositoryTest {
     }
 
     @Test
-    public void findAllByDongAndTypeAndDateRangeNotDeleted_존재하는_검색량_테스트() {
+    public void findAllByDongAndDateRangeNotDeleted_존재하는_검색량_테스트() {
         //given
         Sido sido = Sido.builder()
                 .name("서울시")
@@ -383,34 +383,47 @@ class SearchVolumeRepositoryTest {
         em.persist(dong);
 
         for (int i = 0; i < 7; i++) {
-            for (int j = 0; j < 10; j++) {
-                SearchVolume searchVolume = SearchVolume.builder()
-                        .createdDate(LocalDate.now().minusDays(i))
-                        .volume(j)
-                        .dong(dong)
-                        .shelterType(ShelterType.TSUNAMI)
-                        .build();
-                em.persist(searchVolume);
-            }
+            SearchVolume searchVolume1 = SearchVolume.builder()
+                    .createdDate(LocalDate.now().minusDays(i))
+                    .volume(i + 10)
+                    .dong(dong)
+                    .shelterType(ShelterType.TSUNAMI)
+                    .build();
+            em.persist(searchVolume1);
+
+            SearchVolume searchVolume2 = SearchVolume.builder()
+                    .createdDate(LocalDate.now().minusDays(i))
+                    .volume(i + 10)
+                    .dong(dong)
+                    .shelterType(ShelterType.EARTHQUAKE)
+                    .build();
+            em.persist(searchVolume2);
+
+            SearchVolume searchVolume3 = SearchVolume.builder()
+                    .createdDate(LocalDate.now().minusDays(i))
+                    .volume(i + 10)
+                    .dong(dong)
+                    .shelterType(ShelterType.CIVIL_DEFENCE)
+                    .build();
+            em.persist(searchVolume3);
         }
         em.flush();
         em.clear();
 
         ///when
         List<SearchVolume> volumes = searchVolumeRepository
-                .findAllByDongAndTypeAndDateRangeNotDeleted(
+                .findAllByDongAndDateRangeNotDeleted(
                         dong,
-                        ShelterType.TSUNAMI,
                         LocalDate.now().minusDays(6),
                         LocalDate.now()
                 );
 
         //then
-        assertThat(volumes.size()).isEqualTo(70);
+        assertThat(volumes.size()).isEqualTo(21);
     }
 
     @Test
-    public void findAllByDongAndTypeAndDateRangeNotDeleted_잠롯된_동_테스트() {
+    public void findAllByDongAndDateRangeNotDeleted_잘못된_동_테스트() {
         //given
         Sido sido = Sido.builder()
                 .name("서울시")
@@ -436,24 +449,21 @@ class SearchVolumeRepositoryTest {
         em.persist(dong2);
 
         for (int i = 0; i < 7; i++) {
-            for (int j = 0; j < 10; j++) {
-                SearchVolume searchVolume = SearchVolume.builder()
-                        .createdDate(LocalDate.now().minusDays(i))
-                        .volume(j)
-                        .dong(dong1)
-                        .shelterType(ShelterType.TSUNAMI)
-                        .build();
-                em.persist(searchVolume);
-            }
+            SearchVolume searchVolume = SearchVolume.builder()
+                    .createdDate(LocalDate.now().minusDays(i))
+                    .volume(i + 10)
+                    .dong(dong1)
+                    .shelterType(ShelterType.TSUNAMI)
+                    .build();
+            em.persist(searchVolume);
         }
         em.flush();
         em.clear();
 
         ///when
         List<SearchVolume> volumes = searchVolumeRepository
-                .findAllByDongAndTypeAndDateRangeNotDeleted(
+                .findAllByDongAndDateRangeNotDeleted(
                         dong2,
-                        ShelterType.TSUNAMI,
                         LocalDate.now().minusDays(6),
                         LocalDate.now()
                 );
@@ -462,8 +472,9 @@ class SearchVolumeRepositoryTest {
         assertThat(volumes.size()).isZero();
     }
 
+
     @Test
-    public void findAllByDongAndTypeAndDateRangeNotDeleted_잠롯된_대피소종류_테스트() {
+    public void findAllByDongAndDateRangeNotDeleted_잠롯된_날짜범위_테스트() {
         //given
         Sido sido = Sido.builder()
                 .name("서울시")
@@ -483,71 +494,21 @@ class SearchVolumeRepositoryTest {
         em.persist(dong);
 
         for (int i = 0; i < 7; i++) {
-            for (int j = 0; j < 10; j++) {
-                SearchVolume searchVolume = SearchVolume.builder()
-                        .createdDate(LocalDate.now().minusDays(i))
-                        .volume(j)
-                        .dong(dong)
-                        .shelterType(ShelterType.TSUNAMI)
-                        .build();
-                em.persist(searchVolume);
-            }
+            SearchVolume searchVolume = SearchVolume.builder()
+                    .createdDate(LocalDate.now().minusDays(i))
+                    .volume(i + 10)
+                    .dong(dong)
+                    .shelterType(ShelterType.TSUNAMI)
+                    .build();
+            em.persist(searchVolume);
         }
         em.flush();
         em.clear();
 
         ///when
         List<SearchVolume> volumes = searchVolumeRepository
-                .findAllByDongAndTypeAndDateRangeNotDeleted(
+                .findAllByDongAndDateRangeNotDeleted(
                         dong,
-                        ShelterType.CIVIL_DEFENCE,
-                        LocalDate.now().minusDays(6),
-                        LocalDate.now()
-                );
-
-        //then
-        assertThat(volumes.size()).isZero();
-    }
-
-    @Test
-    public void findAllByDongAndTypeAndDateRangeNotDeleted_잠롯된_날짜범위_테스트() {
-        //given
-        Sido sido = Sido.builder()
-                .name("서울시")
-                .build();
-        em.persist(sido);
-
-        Sigungu sigungu = Sigungu.builder()
-                .name("동대문구")
-                .sido(sido)
-                .build();
-        em.persist(sigungu);
-
-        Dong dong = Dong.builder()
-                .name("전농동")
-                .sigungu(sigungu)
-                .build();
-        em.persist(dong);
-
-        for (int i = 0; i < 7; i++) {
-            for (int j = 0; j < 10; j++) {
-                SearchVolume searchVolume = SearchVolume.builder()
-                        .createdDate(LocalDate.now().minusDays(i))
-                        .volume(j)
-                        .dong(dong)
-                        .shelterType(ShelterType.TSUNAMI)
-                        .build();
-                em.persist(searchVolume);
-            }
-        }
-        em.flush();
-        em.clear();
-
-        ///when
-        List<SearchVolume> volumes = searchVolumeRepository
-                .findAllByDongAndTypeAndDateRangeNotDeleted(
-                        dong,
-                        ShelterType.TSUNAMI,
                         LocalDate.now().plusDays(1),
                         LocalDate.now().plusDays(6)
                 );

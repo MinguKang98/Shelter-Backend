@@ -32,41 +32,42 @@ public interface SearchVolumeRepository extends JpaRepository<SearchVolume, Long
             "where s.createdDate between :from and :to and s.isDeleted = false")
     int getTotalVolumeByDateRangeNotDeleted(@Param("from") LocalDate from, @Param("to") LocalDate to);
 
-    @Query("select s from SearchVolume s " +
-            "where s.dong = :dong and " +
-            "s.shelterType = :type and " +
-            "s.createdDate between :from and :to and " +
-            "s.isDeleted = false ")
-    List<SearchVolume> findAllByDongAndTypeAndDateRangeNotDeleted(@Param("dong") Dong dong,
-                                                                  @Param("type") ShelterType type,
-                                                                  @Param("from") LocalDate from,
-                                                                  @Param("to") LocalDate to);
+    @Query("""
+            select s from SearchVolume s
+            where s.dong = :dong and
+            s.createdDate between :from and :to and
+            s.isDeleted = false
+            order by s.shelterType, s.createdDate
+            """)
+    List<SearchVolume> findAllByDongAndDateRangeNotDeleted(@Param("dong") Dong dong,
+                                                            @Param("from") LocalDate from,
+                                                            @Param("to") LocalDate to);
 
     @Query("""
             select new com.example.shelter.seachvolume.dto.RegionVolumeDto
-            (sd.name, s.shelterType, sum(s.volume))
+            (s.shelterType, sd.name, sum(s.volume))
             from SearchVolume s
-            left join Dong d on s.dong = d
-            left join Sigungu sgg on d.sigungu = sgg
-            left join Sido sd on sgg.sido = sd
+            inner join Dong d on s.dong = d
+            inner join Sigungu sgg on d.sigungu = sgg
+            inner join Sido sd on sgg.sido = sd
             where s.createdDate = :date and
             s.isDeleted = false
-            group by sd.id, s.shelterType
+            group by s.shelterType, sd.id
             """)
     List<RegionVolumeDto> countSidoByDateNotDeleted(@Param("date") LocalDate date);
 
 
     @Query("""
             select new com.example.shelter.seachvolume.dto.RegionVolumeDto
-            (sgg.name, s.shelterType, sum(s.volume))
+            (s.shelterType, sgg.name, sum(s.volume))
             from SearchVolume s
-            left join Dong d on s.dong = d
-            left join Sigungu sgg on d.sigungu = sgg
-            left join Sido sd on sgg.sido = sd
+            inner join Dong d on s.dong = d
+            inner join Sigungu sgg on d.sigungu = sgg
+            inner join Sido sd on sgg.sido = sd
             where sd = :sido and
             s.createdDate = :date and
             s.isDeleted = false
-            group by sgg.id, s.shelterType
+            group by s.shelterType, sgg.id
             """)
     List<RegionVolumeDto> countSigunguBySidoAndDateNotDeleted(@Param("sido") Sido sido,
                                                               @Param("date") LocalDate date);
