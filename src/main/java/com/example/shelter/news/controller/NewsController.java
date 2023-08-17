@@ -12,6 +12,7 @@ import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Sort;
 import org.springframework.http.ResponseEntity;
+import org.springframework.scheduling.annotation.Scheduled;
 import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
@@ -57,10 +58,10 @@ public class NewsController {
         return ResponseEntity.ok(nextNews.map(NewsTitleDto::of).orElseGet(NewsTitleDto::empty));
     }
 
+    @Scheduled(cron = "0 1 0 * * *")
     public void crawling() {
-        LocalDate start = LocalDate.now();
-        LocalDate end = LocalDate.now();
-        ynaCrawler.crawling(start, end);
+        LocalDate today = LocalDate.now().minusDays(1);
+        ynaCrawler.crawling(today, today);
     }
 
 }
