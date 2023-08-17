@@ -20,6 +20,7 @@ import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
 import java.util.List;
+import java.util.Optional;
 
 @Validated
 @RestController
@@ -49,10 +50,11 @@ public class EarthquakeShelterController {
     public ResponseEntity<ShelterListDto> getEarthquakeSheltersByCurrent(
             @RequestParam("lat") double latitude,
             @RequestParam("lon") double longitude,
-            @RequestParam(value = "radius", defaultValue = "2000") @Positive int radius) {
+            @RequestParam(value = "radius", required = false) @Positive Integer radius) {
 
+        Integer radiusValue = Optional.ofNullable(radius).orElse(ShelterVariable.DEFAULT_RADIUS);
         List<EarthquakeShelter> earthquakeShelters = earthquakeShelterService
-                .findAllByCurrent(latitude, longitude, radius);
+                .findAllByCurrent(latitude, longitude, radiusValue);
         return ResponseEntity.ok(ShelterListDto.of(earthquakeShelters));
     }
 

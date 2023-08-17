@@ -4,6 +4,7 @@ import com.example.shelter.civildefenseshelter.service.CivilDefenseShelterServic
 import com.example.shelter.common.dto.ListDto;
 import com.example.shelter.earthquakeshelter.service.EarthquakeShelterService;
 import com.example.shelter.shelter.Shelter;
+import com.example.shelter.shelter.ShelterVariable;
 import com.example.shelter.shelter.dto.ShelterCountDto;
 import com.example.shelter.shelter.dto.ShelterDistanceDto;
 import com.example.shelter.shelter.service.ShelterService;
@@ -19,6 +20,7 @@ import org.springframework.web.bind.annotation.RestController;
 
 import java.util.Comparator;
 import java.util.List;
+import java.util.Optional;
 import java.util.stream.Collectors;
 
 @RestController
@@ -57,9 +59,10 @@ public class ShelterController {
     ResponseEntity<ListDto<ShelterDistanceDto>> getSheltersByCurrent(
             @RequestParam("lat") double latitude,
             @RequestParam("lon") double longitude,
-            @RequestParam(value = "radius", defaultValue = "2000") @Positive int radius) {
+            @RequestParam(value = "radius", required = false) @Positive Integer radius) {
 
-        List<Shelter> shelters = shelterService.findAllByCurrent(latitude, longitude, radius);
+        Integer radiusValue = Optional.ofNullable(radius).orElse(ShelterVariable.DEFAULT_RADIUS);
+        List<Shelter> shelters = shelterService.findAllByCurrent(latitude, longitude, radiusValue);
         List<ShelterDistanceDto> shelterDistanceDtoList = shelters.stream()
                 .map(s -> ShelterDistanceDto.of(s, latitude, longitude))
                 .sorted(Comparator.comparing(ShelterDistanceDto::getDistance))
