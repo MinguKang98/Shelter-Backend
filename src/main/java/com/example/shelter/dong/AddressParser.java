@@ -23,6 +23,7 @@ public class AddressParser {
     private final SidoRepository sidoRepository;
     private final SigunguRepository sigunguRepository;
     private final DongRepository dongRepository;
+    private final String DONG_REGEX = "^.*(읍|면|동|가|로)$";
     private final String CSV_PATH = "csv/address_202201.csv";
 
     public void parse() {
@@ -70,7 +71,7 @@ public class AddressParser {
                 if (!dongMap.containsKey(guId)) {
                     dongMap.put(guId, new HashMap<>());
                 }
-                if (!dongMap.get(guId).containsKey(dongName)) {
+                if (!dongMap.get(guId).containsKey(dongName) && dongName.matches(DONG_REGEX)) {
                     Dong dong = dongRepository.findBySigunguAndNameNotDeleted(Sigungu, dongName)
                             .orElseGet(() -> dongRepository.save(
                                     Dong.builder()
