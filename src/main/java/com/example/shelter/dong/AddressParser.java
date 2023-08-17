@@ -23,7 +23,7 @@ public class AddressParser {
     private final SidoRepository sidoRepository;
     private final SigunguRepository sigunguRepository;
     private final DongRepository dongRepository;
-    private final String DONG_REGEX = "^.*(읍|면|동|가)$";
+    private final String DONG_REGEX = "^.*(읍|면|동|가|로)$";
     private final String CSV_PATH = "csv/address_202201.csv";
 
     public void parse() {

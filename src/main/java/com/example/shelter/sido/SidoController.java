@@ -1,13 +1,15 @@
 package com.example.shelter.sido;
 
-import com.example.shelter.sido.dto.SidoListResponse;
+import com.example.shelter.common.dto.AreaSimpleDto;
+import com.example.shelter.common.dto.ListDto;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RestController;
 
+import java.util.Comparator;
 import java.util.List;
+import java.util.stream.Collectors;
 
 @RestController
 @RequiredArgsConstructor
@@ -16,15 +18,14 @@ public class SidoController {
     private final SidoService sidoService;
 
     @GetMapping(value = "/api/sidos")
-    public ResponseEntity<SidoListResponse> getSidos() {
+    public ResponseEntity<ListDto<AreaSimpleDto>> getSidos() {
         List<Sido> sidos = sidoService.findAll();
-        return ResponseEntity.ok(new SidoListResponse(sidos.size(), sidos));
-    }
+        sidos.sort(Comparator.comparing(Sido::getId));
+        List<AreaSimpleDto> simpleDtoList = sidos.stream()
+                .map(AreaSimpleDto::ofSido)
+                .collect(Collectors.toList());
 
-    @GetMapping(value = "/api/sidos/{id}")
-    public ResponseEntity<Sido> getSidoById(@PathVariable("id") Long id) {
-        Sido sido = sidoService.findById(id);
-        return ResponseEntity.ok(sido);
+        return ResponseEntity.ok(new ListDto<>(simpleDtoList));
     }
 
 }
