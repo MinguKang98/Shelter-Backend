@@ -60,8 +60,8 @@ public class NewsController {
 
     @Scheduled(cron = "0 1 0 * * *")
     public void crawling() {
-        LocalDate today = LocalDate.now().minusDays(1);
-        ynaCrawler.crawling(today, today);
+        LocalDate yesterday = LocalDate.now().minusDays(1);
+        ynaCrawler.crawling(yesterday, yesterday);
     }
 
 }
