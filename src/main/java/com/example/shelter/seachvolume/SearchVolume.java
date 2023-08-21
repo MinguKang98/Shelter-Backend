@@ -40,6 +40,7 @@ public class SearchVolume {
     private Dong dong;
 
     @Enumerated(EnumType.STRING)
+    @Column(columnDefinition = "enum('CIVIL_DEFENCE','EARTHQUAKE','TSUNAMI')")
     private ShelterType shelterType;
 
     @Column

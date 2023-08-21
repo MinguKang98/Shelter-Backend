@@ -7,6 +7,7 @@ import com.example.shelter.sigungu.SigunguRepository;
 import com.opencsv.CSVReader;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.core.io.ClassPathResource;
 import org.springframework.stereotype.Service;
 
@@ -24,7 +25,8 @@ public class AddressParser {
     private final SigunguRepository sigunguRepository;
     private final DongRepository dongRepository;
     private final String DONG_REGEX = "^.*(읍|면|동|가|로)$";
-    private final String CSV_PATH = "csv/address_202201.csv";
+    @Value("${files.area}")
+    private String CSV_PATH = "csv/address_202201.csv";
 
     public void parse() {
         Map<String, Sido> sidoMap = new HashMap<>();

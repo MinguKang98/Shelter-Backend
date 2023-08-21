@@ -14,11 +14,11 @@ public class CivilDefenseShelterDto {
 
     private String fullAddress;
 
+    private String roadAddress;
+
     private double latitude;
 
     private double longitude;
-
-    private String roadAddress;
 
     private double area;
 
@@ -28,9 +28,9 @@ public class CivilDefenseShelterDto {
         this.id = civilDefenseShelter.getId();
         this.name = civilDefenseShelter.getName();
         this.fullAddress = civilDefenseShelter.getAddress().getFullAddress();
+        this.roadAddress = civilDefenseShelter.getRoadAddress();
         this.latitude = civilDefenseShelter.getLatitude();
         this.longitude = civilDefenseShelter.getLongitude();
-        this.roadAddress = civilDefenseShelter.getRoadAddress();
         this.area = civilDefenseShelter.getArea();
         this.type = civilDefenseShelter.getType();
     }
