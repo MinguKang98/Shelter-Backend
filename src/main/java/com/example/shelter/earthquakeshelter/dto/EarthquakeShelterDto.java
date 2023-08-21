@@ -14,6 +14,8 @@ public class EarthquakeShelterDto {
 
     private String fullAddress;
 
+    private String roadAddress;
+
     private double latitude;
 
     private double longitude;
@@ -24,6 +26,7 @@ public class EarthquakeShelterDto {
         this.id = earthquakeShelter.getId();
         this.name = earthquakeShelter.getName();
         this.fullAddress = earthquakeShelter.getAddress().getFullAddress();
+        this.roadAddress = "";
         this.latitude = earthquakeShelter.getLatitude();
         this.longitude = earthquakeShelter.getLongitude();
         this.area = earthquakeShelter.getArea();

@@ -15,6 +15,8 @@ public class TsunamiShelterDto {
 
     private String fullAddress;
 
+    private String roadAddress;
+
     private double latitude;
 
     private double longitude;
@@ -31,6 +33,7 @@ public class TsunamiShelterDto {
         this.id = tsunamiShelter.getId();
         this.name = tsunamiShelter.getName();
         this.fullAddress = tsunamiShelter.getAddress().getFullAddress();
+        this.roadAddress = "";
         this.latitude = tsunamiShelter.getLatitude();
         this.longitude = tsunamiShelter.getLongitude();
         this.capacity = tsunamiShelter.getCapacity();
