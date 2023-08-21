@@ -8,6 +8,7 @@ import org.json.simple.JSONArray;
 import org.json.simple.JSONObject;
 import org.json.simple.parser.JSONParser;
 import org.json.simple.parser.ParseException;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.http.HttpMethod;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Component;
@@ -25,7 +26,8 @@ public class RawEarthquakeShelterParser {
 
     private final RestTemplate restTemplate;
     private final String URL = "http://apis.data.go.kr/1741000/EmergencyAssemblyArea_Earthquake2/getArea1List";
-    private final String SERVICE_KEY = "%2BeuqeRinZwJwov6vl5hsAHg3NBJ3smIJoCQDEx0lUuDQuhRafmQ9yS%2B1vpKrAdmV%2BG9j6p%2FqfsPZlTpTkb95%2Bw%3D%3D";
+    @Value("${shelters.earthquake_key}")
+    private String SERVICE_KEY;
 
     public int getTotalCount() {
 

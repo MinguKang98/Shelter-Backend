@@ -5,6 +5,7 @@ import com.example.shelter.util.GpsUtils;
 import com.opencsv.CSVReader;
 import lombok.extern.slf4j.Slf4j;
 import org.locationtech.proj4j.ProjCoordinate;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.core.io.ClassPathResource;
 import org.springframework.stereotype.Component;
 
@@ -17,7 +18,8 @@ import java.util.List;
 @Component
 public class RawCivilDefenseShelterParser {
 
-    private final String CSV_PATH = "csv/civil_defense_shelter_20221020.csv";
+    @Value("${files.civil_defense}")
+    private String CSV_PATH;
 
     public List<RawCivilDefenseShelter> parse() {
         ClassPathResource resource = new ClassPathResource(CSV_PATH);
