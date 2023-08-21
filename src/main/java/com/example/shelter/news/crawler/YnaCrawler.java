@@ -10,6 +10,7 @@ import org.jsoup.nodes.Element;
 import org.jsoup.select.Elements;
 import org.openqa.selenium.WebDriver;
 import org.openqa.selenium.chrome.ChromeDriver;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.util.UriComponentsBuilder;
@@ -27,7 +28,8 @@ import java.util.List;
 public class YnaCrawler implements Crawler {
 
     private final NewsRepository newsRepository;
-    private final String DRIVER_PATH = "C:\\Users\\alsrn\\Desktop\\Coding\\shelter\\src\\main\\resources\\driver\\chromedriver.exe";
+    @Value("${files.chrome_driver}")
+    private String DRIVER_PATH;
     private final String URL = "https://www.yna.co.kr/search/index";
     private final String WRITER = "연합뉴스";
     private final List<String> NEWS_TYPES = List.of("지진", "쓰나미", "민방위");
