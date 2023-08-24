@@ -1,9 +1,12 @@
 package com.example.shelter.shelter.address;
 
+import lombok.extern.slf4j.Slf4j;
+
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
 
+@Slf4j
 public class AddressUtils {
 
     private static List<String> exceptSigungus = Arrays.asList(
@@ -14,6 +17,7 @@ public class AddressUtils {
     public static Address parseAddress(String address) {
         String[] parts = address.split("\\s+");
         if (parts.length < 3) {
+            log.error("글자 수가 작습니다 : {}", address);
             return new Address("", "", "", "");
         }
         List<String> partList = new ArrayList<>(Arrays.asList(parts));
@@ -106,6 +110,9 @@ public class AddressUtils {
         if (partList.get(0).equals("울산광역시")) {
             if (partList.get(1).equals("울주군") && partList.get(2).equals("청량면")) {
                 partList.set(2, "청량읍");
+            }
+            if (partList.get(1).equals("남구") && partList.get(2).equals("야음장생포동")) {
+                partList.set(2, "장생포동");
             }
         }
 
