@@ -8,20 +8,20 @@ import com.example.shelter.news.dto.NewsTitleDto;
 import com.example.shelter.news.service.NewsService;
 import jakarta.validation.constraints.Positive;
 import lombok.RequiredArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Sort;
+import org.springframework.format.annotation.DateTimeFormat;
 import org.springframework.http.ResponseEntity;
 import org.springframework.scheduling.annotation.Scheduled;
 import org.springframework.validation.annotation.Validated;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.PathVariable;
-import org.springframework.web.bind.annotation.RequestParam;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 
 import java.time.LocalDate;
 import java.util.Optional;
 
+@Slf4j
 @Validated
 @RestController
 @RequiredArgsConstructor
@@ -62,6 +62,14 @@ public class NewsController {
     public void crawling() {
         LocalDate yesterday = LocalDate.now().minusDays(1);
         ynaCrawler.crawling(yesterday, yesterday);
+        log.info("{} news crawling is done", yesterday);
     }
+
+//    @PostMapping("/api/news/test")
+//    public ResponseEntity<Void> crawlingTest(@RequestParam("start") @DateTimeFormat(pattern = "yyyy-MM-dd") LocalDate start,
+//                                             @RequestParam("end") @DateTimeFormat(pattern = "yyyy-MM-dd") LocalDate end) {
+//        ynaCrawler.crawling(start, end);
+//        return ResponseEntity.noContent().build();
+//    }
 
 }
