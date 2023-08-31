@@ -51,8 +51,32 @@ public class ShelterPageDto {
                 .collect(Collectors.toList());
     }
 
+    protected ShelterPageDto(Page<? extends Shelter> page, List<String> roadAddresses) {
+        this.totalCount = page.getTotalElements();
+        this.totalPage = page.getTotalPages();
+        this.page = page.getNumber() + 1;
+        this.size = ShelterVariable.PAGE_SIZE;
+        this.hasNext = page.hasNext();
+        this.hasPrevious = page.hasPrevious();
+        this.content = page.getContent().stream()
+                .map(s -> {
+                            int index = page.getContent().indexOf(s);
+                            return switch (s.getShelterType()) {
+                                case TSUNAMI -> TsunamiShelterDto.of((TsunamiShelter) s, roadAddresses.get(index));
+                                case EARTHQUAKE -> EarthquakeShelterDto.of((EarthquakeShelter) s, roadAddresses.get(index));
+                                case CIVIL_DEFENCE -> CivilDefenseShelterDto.of((CivilDefenseShelter) s);
+                            };
+                        }
+                )
+                .collect(Collectors.toList());
+    }
+
     public static ShelterPageDto of(Page<? extends Shelter> page) {
         return new ShelterPageDto(page);
+    }
+
+    public static ShelterPageDto of(Page<? extends Shelter> page, List<String> roadAddresses) {
+        return new ShelterPageDto(page, roadAddresses);
     }
 
 }

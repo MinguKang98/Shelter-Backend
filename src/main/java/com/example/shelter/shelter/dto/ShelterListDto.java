@@ -34,8 +34,27 @@ public class ShelterListDto {
                 .collect(Collectors.toList());
     }
 
+    protected ShelterListDto(List<? extends Shelter> content, List<String> roadAddresses) {
+        this.totalCount = content.size();
+        this.content = content.stream()
+                .map(s -> {
+                            int index = content.indexOf(s);
+                            return switch (s.getShelterType()) {
+                                case TSUNAMI -> TsunamiShelterDto.of((TsunamiShelter) s, roadAddresses.get(index));
+                                case EARTHQUAKE -> EarthquakeShelterDto.of((EarthquakeShelter) s, roadAddresses.get(index));
+                                case CIVIL_DEFENCE -> CivilDefenseShelterDto.of((CivilDefenseShelter) s);
+                            };
+                        }
+                )
+                .collect(Collectors.toList());
+    }
+
     public static ShelterListDto of(List<? extends Shelter> content) {
         return new ShelterListDto(content);
+    }
+
+    public static ShelterListDto of(List<? extends Shelter> content, List<String> roadAddresses) {
+        return new ShelterListDto(content, roadAddresses);
     }
 
 }

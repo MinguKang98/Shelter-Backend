@@ -3,6 +3,7 @@ package com.example.shelter.tsunamishelter.controller;
 import com.example.shelter.dong.Dong;
 import com.example.shelter.dong.DongService;
 import com.example.shelter.shelter.ShelterVariable;
+import com.example.shelter.shelter.address.RoadAddressParser;
 import com.example.shelter.tsunamishelter.TsunamiShelter;
 import com.example.shelter.tsunamishelter.dto.TsunamiShelterDto;
 import com.example.shelter.shelter.dto.ShelterListDto;
@@ -21,6 +22,7 @@ import org.springframework.web.bind.annotation.RestController;
 
 import java.util.List;
 import java.util.Optional;
+import java.util.stream.Collectors;
 
 @Validated
 @RestController
@@ -29,11 +31,13 @@ public class TsunamiShelterController {
 
     private final TsunamiShelterService tsunamiShelterService;
     private final DongService dongService;
+    private final RoadAddressParser roadAddressParser;
 
     @GetMapping("/api/shelters/tsunami/{id}")
     public ResponseEntity<TsunamiShelterDto> getTsunamiShelter(@PathVariable("id") Long id) {
         TsunamiShelter tsunamiShelter = tsunamiShelterService.findById(id);
-        return ResponseEntity.ok(TsunamiShelterDto.of(tsunamiShelter));
+        String roadAddress = roadAddressParser.getRoadAddress(tsunamiShelter.getAddress());
+        return ResponseEntity.ok(TsunamiShelterDto.of(tsunamiShelter, roadAddress));
     }
 
     @GetMapping("/api/shelters/tsunami")
@@ -43,7 +47,10 @@ public class TsunamiShelterController {
         PageRequest pageRequest = PageRequest.of(page - 1, ShelterVariable.PAGE_SIZE);
         Dong dong = dongService.findById(dongId);
         Page<TsunamiShelter> tsunamiShelters = tsunamiShelterService.findAllByDong(dong, pageRequest);
-        return ResponseEntity.ok(ShelterPageDto.of(tsunamiShelters));
+        List<String> roadAddresses = tsunamiShelters.getContent().stream()
+                .map(t -> roadAddressParser.getRoadAddress(t.getAddress()))
+                .collect(Collectors.toList());
+        return ResponseEntity.ok(ShelterPageDto.of(tsunamiShelters, roadAddresses));
     }
 
     @GetMapping("/api/shelters/tsunami/current")
@@ -55,7 +62,10 @@ public class TsunamiShelterController {
         Integer radiusValue = Optional.ofNullable(radius).orElse(ShelterVariable.DEFAULT_RADIUS);
         List<TsunamiShelter> tsunamiShelters = tsunamiShelterService
                 .findAllByCurrent(latitude, longitude, radiusValue);
-        return ResponseEntity.ok(ShelterListDto.of(tsunamiShelters));
+        List<String> roadAddresses = tsunamiShelters.stream()
+                .map(t -> roadAddressParser.getRoadAddress(t.getAddress()))
+                .collect(Collectors.toList());
+        return ResponseEntity.ok(ShelterListDto.of(tsunamiShelters, roadAddresses));
     }
 
 }
