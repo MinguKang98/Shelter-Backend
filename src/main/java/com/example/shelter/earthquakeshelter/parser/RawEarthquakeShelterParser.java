@@ -26,7 +26,7 @@ public class RawEarthquakeShelterParser {
 
     private final RestTemplate restTemplate;
     private final String URL = "http://apis.data.go.kr/1741000/EmergencyAssemblyArea_Earthquake2/getArea1List";
-    @Value("${shelters.earthquake_key}")
+    @Value("${apis.earthquake_key}")
     private String SERVICE_KEY;
 
     public int getTotalCount() {

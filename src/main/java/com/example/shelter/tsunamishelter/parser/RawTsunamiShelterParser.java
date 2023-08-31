@@ -25,7 +25,7 @@ public class RawTsunamiShelterParser {
 
     private final RestTemplate restTemplate;
     private final String URL = "http://apis.data.go.kr/1741000/TsunamiShelter3/getTsunamiShelter1List";
-    @Value("${shelters.tsunami_key}")
+    @Value("${apis.tsunami_key}")
     private String SERVICE_KEY;
 
     public int getTotalCount() {
