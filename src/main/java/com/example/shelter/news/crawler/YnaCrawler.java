@@ -2,6 +2,7 @@ package com.example.shelter.news.crawler;
 
 import com.example.shelter.news.News;
 import com.example.shelter.news.repository.NewsRepository;
+import com.example.shelter.news.selenium.Selenium;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.jsoup.Jsoup;
@@ -9,8 +10,6 @@ import org.jsoup.nodes.Document;
 import org.jsoup.nodes.Element;
 import org.jsoup.select.Elements;
 import org.openqa.selenium.WebDriver;
-import org.openqa.selenium.chrome.ChromeDriver;
-import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.util.UriComponentsBuilder;
@@ -28,18 +27,15 @@ import java.util.List;
 public class YnaCrawler implements Crawler {
 
     private final NewsRepository newsRepository;
-    @Value("${files.chrome_driver}")
-    private String DRIVER_PATH;
-    private final String URL = "https://www.yna.co.kr/search/index";
+    private final Selenium selenium;
+    private final String NEWS_URL = "https://www.yna.co.kr/search/index";
     private final String WRITER = "연합뉴스";
     private final List<String> NEWS_TYPES = List.of("지진", "쓰나미", "민방위");
 
     @Transactional
     public void crawling(LocalDate start, LocalDate end) {
         List<News> newsList = new ArrayList<>();
-
-        System.setProperty("webdriver.chrome.driver", DRIVER_PATH);
-        WebDriver driver = new ChromeDriver();
+        WebDriver driver = selenium.getDriver();
 
         try {
             for (String newsType : NEWS_TYPES) {
@@ -61,7 +57,7 @@ public class YnaCrawler implements Crawler {
         String strStart = start.format(dateTimeFormatter);
         String strEnd = end.format(dateTimeFormatter);
 
-        String url = UriComponentsBuilder.fromHttpUrl(URL)
+        String url = UriComponentsBuilder.fromHttpUrl(NEWS_URL)
                 .queryParam("query", newsType)
                 .queryParam("ctype", "A")
                 .queryParam("scope", "title")
@@ -80,7 +76,7 @@ public class YnaCrawler implements Crawler {
 
         List<News> newsList = new ArrayList<>();
         for (int i = 1; i <= totalPage; i++) {
-            String tempUrl = UriComponentsBuilder.fromHttpUrl(URL)
+            String tempUrl = UriComponentsBuilder.fromHttpUrl(NEWS_URL)
                     .queryParam("query", newsType)
                     .queryParam("ctype", "A")
                     .queryParam("scope", "title")

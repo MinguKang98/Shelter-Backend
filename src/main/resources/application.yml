@@ -19,4 +19,6 @@ shelters:
 files:
     civil_defense: csv/civil_defense_shelter_20221020.csv
     area: csv/address_202201.csv
-    chrome_driver: ${CHROME_DRIVER_PATH}
+
+url:
+    remote_driver: ${REMOTE_DRIVER_URL}
