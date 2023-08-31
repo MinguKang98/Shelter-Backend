@@ -1,6 +1,5 @@
 package com.example.shelter.tsunamishelter.dto;
 
-import com.example.shelter.shelter.address.Address;
 import com.example.shelter.tsunamishelter.TsunamiShelter;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
@@ -42,8 +41,25 @@ public class TsunamiShelterDto {
         this.type = tsunamiShelter.getType();
     }
 
+    private TsunamiShelterDto(TsunamiShelter tsunamiShelter, String roadAddress) {
+        this.id = tsunamiShelter.getId();
+        this.name = tsunamiShelter.getName();
+        this.fullAddress = tsunamiShelter.getAddress().getFullAddress();
+        this.roadAddress = roadAddress;
+        this.latitude = tsunamiShelter.getLatitude();
+        this.longitude = tsunamiShelter.getLongitude();
+        this.capacity = tsunamiShelter.getCapacity();
+        this.length = tsunamiShelter.getLength();
+        this.height = tsunamiShelter.getHeight();
+        this.type = tsunamiShelter.getType();
+    }
+
     public static TsunamiShelterDto of(TsunamiShelter tsunamiShelter) {
         return new TsunamiShelterDto(tsunamiShelter);
+    }
+
+    public static TsunamiShelterDto of(TsunamiShelter tsunamiShelter, String roadAddress) {
+        return new TsunamiShelterDto(tsunamiShelter, roadAddress);
     }
 
 }

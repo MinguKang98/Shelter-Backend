@@ -32,8 +32,22 @@ public class EarthquakeShelterDto {
         this.area = earthquakeShelter.getArea();
     }
 
+    protected EarthquakeShelterDto(EarthquakeShelter earthquakeShelter, String roadAddress) {
+        this.id = earthquakeShelter.getId();
+        this.name = earthquakeShelter.getName();
+        this.fullAddress = earthquakeShelter.getAddress().getFullAddress();
+        this.roadAddress = roadAddress;
+        this.latitude = earthquakeShelter.getLatitude();
+        this.longitude = earthquakeShelter.getLongitude();
+        this.area = earthquakeShelter.getArea();
+    }
+
     public static EarthquakeShelterDto of(EarthquakeShelter earthquakeShelter) {
         return new EarthquakeShelterDto(earthquakeShelter);
+    }
+
+    public static EarthquakeShelterDto of(EarthquakeShelter earthquakeShelter, String roadAddress) {
+        return new EarthquakeShelterDto(earthquakeShelter, roadAddress);
     }
 
 }

@@ -6,6 +6,7 @@ import com.example.shelter.earthquakeshelter.EarthquakeShelter;
 import com.example.shelter.earthquakeshelter.dto.EarthquakeShelterDto;
 import com.example.shelter.earthquakeshelter.service.EarthquakeShelterService;
 import com.example.shelter.shelter.ShelterVariable;
+import com.example.shelter.shelter.address.RoadAddressParser;
 import com.example.shelter.shelter.dto.ShelterListDto;
 import com.example.shelter.shelter.dto.ShelterPageDto;
 import jakarta.validation.constraints.Positive;
@@ -21,6 +22,7 @@ import org.springframework.web.bind.annotation.RestController;
 
 import java.util.List;
 import java.util.Optional;
+import java.util.stream.Collectors;
 
 @Validated
 @RestController
@@ -29,11 +31,13 @@ public class EarthquakeShelterController {
 
     private final EarthquakeShelterService earthquakeShelterService;
     private final DongService dongService;
+    private final RoadAddressParser roadAddressParser;
 
     @GetMapping("/api/shelters/earthquake/{id}")
     public ResponseEntity<EarthquakeShelterDto> getEarthquakeShelter(@PathVariable("id") Long id) {
         EarthquakeShelter earthquakeShelter = earthquakeShelterService.findById(id);
-        return ResponseEntity.ok(EarthquakeShelterDto.of(earthquakeShelter));
+        String roadAddress = roadAddressParser.getRoadAddress(earthquakeShelter.getAddress());
+        return ResponseEntity.ok(EarthquakeShelterDto.of(earthquakeShelter, roadAddress));
     }
 
     @GetMapping("/api/shelters/earthquake")
@@ -43,7 +47,10 @@ public class EarthquakeShelterController {
         PageRequest pageRequest = PageRequest.of(page - 1, ShelterVariable.PAGE_SIZE);
         Dong dong = dongService.findById(dongId);
         Page<EarthquakeShelter> earthquakeShelters = earthquakeShelterService.findAllByDong(dong, pageRequest);
-        return ResponseEntity.ok(ShelterPageDto.of(earthquakeShelters));
+        List<String> roadAddresses = earthquakeShelters.getContent().stream()
+                .map(e -> roadAddressParser.getRoadAddress(e.getAddress()))
+                .collect(Collectors.toList());
+        return ResponseEntity.ok(ShelterPageDto.of(earthquakeShelters, roadAddresses));
     }
 
     @GetMapping("/api/shelters/earthquake/current")
@@ -55,7 +62,10 @@ public class EarthquakeShelterController {
         Integer radiusValue = Optional.ofNullable(radius).orElse(ShelterVariable.DEFAULT_RADIUS);
         List<EarthquakeShelter> earthquakeShelters = earthquakeShelterService
                 .findAllByCurrent(latitude, longitude, radiusValue);
-        return ResponseEntity.ok(ShelterListDto.of(earthquakeShelters));
+        List<String> roadAddresses = earthquakeShelters.stream()
+                .map(e -> roadAddressParser.getRoadAddress(e.getAddress()))
+                .collect(Collectors.toList());
+        return ResponseEntity.ok(ShelterListDto.of(earthquakeShelters, roadAddresses));
     }
 
 }

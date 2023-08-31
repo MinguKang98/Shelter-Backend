@@ -12,9 +12,11 @@ logging.level:
     org.hibernate.SQL: debug
     org.hibernate.orm.jdbc.bind: trace
 
-shelters:
+apis:
     tsunami_key: ${TSUNAMI_KEY}
     earthquake_key: ${EARTHQUAKE_KEY}
+    address_search_key: ${ADDRESS_SEARCH_KEY}
+
 
 files:
     civil_defense: csv/civil_defense_shelter_20221020.csv
