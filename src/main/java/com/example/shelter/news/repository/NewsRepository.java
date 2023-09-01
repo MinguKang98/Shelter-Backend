@@ -26,7 +26,6 @@ public interface NewsRepository extends JpaRepository<News, Long> {
             """)
     List<News> findPrevByIdNotDeleted(@Param("id") Long id, Pageable pageable);
 
-
     @Query("""
             select n from News n
             where n.id > :id and
@@ -34,5 +33,8 @@ public interface NewsRepository extends JpaRepository<News, Long> {
             order by n.id asc
             """)
     List<News> findNextByIdNotDeleted(@Param("id") Long id, Pageable pageable);
+
+    @Query("select n from News n where n.newsCode = :code and n.isDeleted = false")
+    Optional<News> findByNewsCodeNotDeleted(@Param("code") String newsCode);
 
 }
