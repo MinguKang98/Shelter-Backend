@@ -32,16 +32,20 @@ public class News extends BaseEntity {
     @Column
     private String content;
 
+    @Column(unique = true)
+    private String newsCode;
+
     @Column
     private boolean isDeleted = false;
 
     @Builder
-    public News(Long id, LocalDateTime publishTime, String writer, String title, String content) {
+    public News(Long id, LocalDateTime publishTime, String writer, String title, String content, String newsCode) {
         this.id = id;
         this.publishTime = publishTime;
         this.writer = writer;
         this.title = title;
         this.content = content;
+        this.newsCode = newsCode;
     }
 
     public void updateDeleted(boolean deleted) {

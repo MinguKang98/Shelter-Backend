@@ -114,8 +114,8 @@ class NewsRepositoryTest {
             News news = News.builder()
                     .publishTime(LocalDateTime.now())
                     .writer("작성자")
-                    .title("제목"+i)
-                    .content("내용"+i)
+                    .title("제목" + i)
+                    .content("내용" + i)
                     .build();
             em.persist(news);
             newsList.add(news);
@@ -142,8 +142,8 @@ class NewsRepositoryTest {
             News news = News.builder()
                     .publishTime(LocalDateTime.now())
                     .writer("작성자")
-                    .title("제목"+i)
-                    .content("내용"+i)
+                    .title("제목" + i)
+                    .content("내용" + i)
                     .build();
             em.persist(news);
             newsList.add(news);
@@ -169,8 +169,8 @@ class NewsRepositoryTest {
             News news = News.builder()
                     .publishTime(LocalDateTime.now())
                     .writer("작성자")
-                    .title("제목"+i)
-                    .content("내용"+i)
+                    .title("제목" + i)
+                    .content("내용" + i)
                     .build();
             em.persist(news);
             newsList.add(news);
@@ -197,8 +197,8 @@ class NewsRepositoryTest {
             News news = News.builder()
                     .publishTime(LocalDateTime.now())
                     .writer("작성자")
-                    .title("제목"+i)
-                    .content("내용"+i)
+                    .title("제목" + i)
+                    .content("내용" + i)
                     .build();
             em.persist(news);
             newsList.add(news);
@@ -214,6 +214,40 @@ class NewsRepositoryTest {
 
         //then
         assertThat(nextNews.size()).isZero();
+    }
+
+    @Test
+    public void findByNewsCodeNotDeleted_존재_테스트() {
+        String code = "123a!";
+        News news = News.builder()
+                .publishTime(LocalDateTime.now())
+                .writer("작성자")
+                .title("제목")
+                .content("내용")
+                .newsCode(code)
+                .build();
+        em.persist(news);
+        em.flush();
+        em.clear();
+
+        ///when
+        Optional<News> findNews = newsRepository.findByNewsCodeNotDeleted(code);
+
+        //then
+        assertThat(findNews).isNotEmpty();
+        assertThat(findNews.get().getId()).isEqualTo(news.getId());
+    }
+
+    @Test
+    public void findByNewsCodeNotDeleted_존재_안함_테스트() {
+        //given
+        String code = "123a!";
+
+        ///when
+        Optional<News> findNews = newsRepository.findByNewsCodeNotDeleted(code);
+
+        //then
+        assertThat(findNews).isEmpty();
     }
 
 }

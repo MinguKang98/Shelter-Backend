@@ -20,6 +20,7 @@ import java.time.format.DateTimeFormatter;
 import java.util.ArrayList;
 import java.util.Comparator;
 import java.util.List;
+import java.util.Optional;
 
 @Slf4j
 @Service
@@ -31,10 +32,12 @@ public class YnaCrawler implements Crawler {
     private final String NEWS_URL = "https://www.yna.co.kr/search/index";
     private final String WRITER = "연합뉴스";
     private final List<String> NEWS_TYPES = List.of("지진", "쓰나미", "민방위");
+    private final List<String> NEWS_CODES = new ArrayList<>();
 
     @Transactional
     public void crawling(LocalDate start, LocalDate end) {
         List<News> newsList = new ArrayList<>();
+        NEWS_CODES.clear();
         WebDriver driver = selenium.getDriver();
 
         try {
@@ -92,6 +95,14 @@ public class YnaCrawler implements Crawler {
 
             for (Element rawNews : rawNewsList) {
                 String href = rawNews.attr("href");
+                String newsCode = href.replace("//www.yna.co.kr/view/", "").replace("?section=search", "");
+                Optional<News> findNews = newsRepository.findByNewsCodeNotDeleted(newsCode);
+                if (findNews.isPresent() || NEWS_CODES.contains(newsCode)) {
+                    continue;
+                } else {
+                    NEWS_CODES.add(newsCode);
+                }
+
                 Document click = click(driver, "https:" + href);
                 String title = click.select("header.title-article01 > h1.tit").text();
                 String strTime = click.select("header.title-article01 > p.update-time").text().substring(4);
@@ -111,6 +122,7 @@ public class YnaCrawler implements Crawler {
                         .writer(WRITER)
                         .title(title)
                         .content(content)
+                        .newsCode(newsCode)
                         .build();
                 newsList.add(news);
             }
