@@ -20,7 +20,7 @@ jobs:
         uses: actions/setup-java@v3
         with:
           java-version: '17'
-	  distribution: 'temurin'
+          distribution: 'temurin'
         
       - name: Build Spring server
         run: |
@@ -29,13 +29,13 @@ jobs:
 
 
       - name: Deploy Prod use SCP
-      	uses: appleboy/scp-action@v0.0.1
-            with:
-              host: ${{ secrets.HOST }}
-              username: ubuntu
-              key: ${{ secrets.SSH_PEM_KEY }}
-              source: "./build/libs/*.jar"
-              target: "/home/ubuntu/prod"
+        uses: appleboy/scp-action@v0.0.1
+        with:
+	  host: ${{ secrets.HOST }}
+          username: ubuntu
+          key: ${{ secrets.SSH_PEM_KEY }}
+          source: "./build/libs/*.jar"
+          target: "/home/ubuntu/prod"
 
 
       - name: Execute Server Init Script
