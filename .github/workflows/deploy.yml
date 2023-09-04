@@ -31,7 +31,7 @@ jobs:
       - name: Deploy Prod use SCP
         uses: appleboy/scp-action@v0.0.1
         with:
-	  host: ${{ secrets.HOST }}
+          host: ${{ secrets.HOST }}
           username: ubuntu
           key: ${{ secrets.SSH_PEM_KEY }}
           source: "./build/libs/*.jar"
