@@ -1,0 +1,51 @@
+name: SHERE Deploy
+
+on:
+  push:
+    branches: [ "master" ]
+  pull_request:
+    branches: [ "master" ]
+
+permissions:
+  contents: read
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout
+	      uses: actions/checkout@v3
+  
+      - name: Setup JDK 17
+        uses: actions/setup-java@v3
+        with:
+          java-version: '17'
+	        distribution: 'temurin'
+        
+      - name: Build Spring server
+        run: |
+          chmod +x ./gradlew
+          ./gradlew clean build -x test
+
+
+      - name: Deploy Prod use SCP
+      	uses: appleboy/scp-action@v0.0.1
+            with:
+              host: ${{ secrets.HOST }}
+              username: ubuntu
+              key: ${{ secrets.SSH_PEM_KEY }}
+              source: "./build/libs/*.jar"
+              target: "/home/ubuntu/prod"
+
+
+      - name: Execute Server Init Script
+        uses: appleboy/ssh-action@v1.0.0
+        with:
+          host: ${{ secrets.HOST }}
+          username: ubuntu
+          key: ${{ secrets.SSH_PEM_KEY }}
+          port: 22
+          script: |
+            cd /home/ubuntu/prod
+            ./server-init.sh
