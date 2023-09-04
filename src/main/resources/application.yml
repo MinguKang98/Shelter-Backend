@@ -1,0 +1,26 @@
+spring:
+    profiles:
+        default: dev
+
+    jpa:
+        properties:
+            hibernate:
+                format_sql: true
+                highlight_sql: true
+
+logging.level:
+    org.hibernate.SQL: debug
+    org.hibernate.orm.jdbc.bind: trace
+
+apis:
+    tsunami_key: ${TSUNAMI_KEY}
+    earthquake_key: ${EARTHQUAKE_KEY}
+    address_search_key: ${ADDRESS_SEARCH_KEY}
+
+
+files:
+    civil_defense: csv/civil_defense_shelter_20221020.csv
+    area: csv/address_202201.csv
+
+url:
+    remote_driver: ${REMOTE_DRIVER_URL}
