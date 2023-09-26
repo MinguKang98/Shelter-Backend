@@ -16,6 +16,9 @@ apis:
     tsunami_key: ${TSUNAMI_KEY}
     earthquake_key: ${EARTHQUAKE_KEY}
     address_search_key: ${ADDRESS_SEARCH_KEY}
+    naver:
+        client_id: ${NAVER_CLIENT_ID}
+        client_secret: ${NAVER_CLIENT_SECRET}
 
 
 files:

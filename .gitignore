@@ -41,3 +41,6 @@ src/main/resources/csv/*.csv
 
 ### chromedriver ###
 src/main/resources/driver/*.exe
+
+### test application ###
+src/main/resources/application-test.yml

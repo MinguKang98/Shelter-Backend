@@ -31,6 +31,10 @@ public class Address {
         this.detail = detail;
     }
 
+    public String getFullDongName() {
+        return String.format("%s %s %s", sidoName, sigunguName, dongName);
+    }
+
     public String getFullAddress() {
         return String.format("%s %s %s %s", sidoName, sigunguName, dongName, detail);
     }
