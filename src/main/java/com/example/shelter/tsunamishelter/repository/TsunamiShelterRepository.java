@@ -18,6 +18,9 @@ public interface TsunamiShelterRepository extends JpaRepository<TsunamiShelter, 
     Optional<TsunamiShelter> findByIdNotDeleted(@Param("id") Long id);
 
     @Query("select t from TsunamiShelter t where t.dong = :dong and t.isDeleted = false")
+    List<TsunamiShelter> findAllByDongNotDeleted(@Param("dong") Dong dong);
+
+    @Query("select t from TsunamiShelter t where t.dong = :dong and t.isDeleted = false")
     Page<TsunamiShelter> findAllByDongNotDeleted(@Param("dong") Dong dong, Pageable pageable);
 
     @Query("select t from TsunamiShelter t " +
