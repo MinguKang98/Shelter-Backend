@@ -49,6 +49,10 @@ public class NaverApiParser {
             String sigungu = String.valueOf(area2.get("name"));
             String dong = String.valueOf(area3.get("name"));
 
+            if (sido.equals("세종특별자치시") && sigungu.isEmpty()) {
+                sigungu = "세종시";
+            }
+
             return AddressUtils.parseAddress(String.format("%s %s %s", sido, sigungu, dong));
         } catch (ParseException e) {
             throw new RuntimeException();
