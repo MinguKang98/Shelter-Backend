@@ -41,17 +41,28 @@ public class TsunamiShelterController {
     }
 
     @GetMapping("/api/shelters/tsunami")
-    public ResponseEntity<ShelterPageDto> getTsunamiSheltersByDong(@RequestParam("dong_id") Long dongId,
-                                                                   @RequestParam("page") @Positive int page) {
+    public ResponseEntity<ShelterListDto> getTsunamiSheltersByDong(@RequestParam("dong_id") Long dongId) {
 
-        PageRequest pageRequest = PageRequest.of(page - 1, ShelterVariable.PAGE_SIZE);
         Dong dong = dongService.findById(dongId);
-        Page<TsunamiShelter> tsunamiShelters = tsunamiShelterService.findAllByDong(dong, pageRequest);
-        List<String> roadAddresses = tsunamiShelters.getContent().stream()
+        List<TsunamiShelter> tsunamiShelters = tsunamiShelterService.findAllByDong(dong);
+        List<String> roadAddresses = tsunamiShelters.stream()
                 .map(t -> roadAddressParser.getRoadAddress(t.getAddress()))
                 .collect(Collectors.toList());
-        return ResponseEntity.ok(ShelterPageDto.of(tsunamiShelters, roadAddresses));
+        return ResponseEntity.ok(ShelterListDto.of(tsunamiShelters, roadAddresses));
     }
+
+//    @GetMapping("/api/shelters/tsunami")
+//    public ResponseEntity<ShelterPageDto> getTsunamiSheltersByDong(@RequestParam("dong_id") Long dongId,
+//                                                                   @RequestParam("page") @Positive int page) {
+//
+//        PageRequest pageRequest = PageRequest.of(page - 1, ShelterVariable.PAGE_SIZE);
+//        Dong dong = dongService.findById(dongId);
+//        Page<TsunamiShelter> tsunamiShelters = tsunamiShelterService.findAllByDong(dong, pageRequest);
+//        List<String> roadAddresses = tsunamiShelters.getContent().stream()
+//                .map(t -> roadAddressParser.getRoadAddress(t.getAddress()))
+//                .collect(Collectors.toList());
+//        return ResponseEntity.ok(ShelterPageDto.of(tsunamiShelters, roadAddresses));
+//    }
 
     @GetMapping("/api/shelters/tsunami/current")
     public ResponseEntity<ShelterListDto> getTsunamiSheltersByCurrent(
