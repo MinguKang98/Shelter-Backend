@@ -7,6 +7,7 @@ import com.example.shelter.earthquakeshelter.dto.EarthquakeShelterDto;
 import com.example.shelter.shelter.Shelter;
 import com.example.shelter.tsunamishelter.TsunamiShelter;
 import com.example.shelter.tsunamishelter.dto.TsunamiShelterDto;
+import com.example.shelter.util.GpsUtils;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 
@@ -18,6 +19,10 @@ import java.util.stream.Collectors;
 public class ShelterListDto {
 
     private long totalCount;
+
+    private double avgLatitude;
+
+    private double avgLongitude;
 
     private List<?> content;
 
@@ -32,6 +37,8 @@ public class ShelterListDto {
                         }
                 )
                 .collect(Collectors.toList());
+        this.avgLatitude = GpsUtils.getAvgLatitude(content);
+        this.avgLongitude = GpsUtils.getAvgLongitude(content);
     }
 
     protected ShelterListDto(List<? extends Shelter> content, List<String> roadAddresses) {
@@ -47,6 +54,8 @@ public class ShelterListDto {
                         }
                 )
                 .collect(Collectors.toList());
+        this.avgLatitude = GpsUtils.getAvgLatitude(content);
+        this.avgLongitude = GpsUtils.getAvgLongitude(content);
     }
 
     public static ShelterListDto of(List<? extends Shelter> content) {
