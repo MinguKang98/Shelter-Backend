@@ -41,17 +41,28 @@ public class EarthquakeShelterController {
     }
 
     @GetMapping("/api/shelters/earthquake")
-    public ResponseEntity<ShelterPageDto> getEarthquakeSheltersByDong(@RequestParam("dong_id") Long dongId,
-                                                                      @RequestParam("page") @Positive int page) {
+    public ResponseEntity<ShelterListDto> getEarthquakeSheltersByDong(@RequestParam("dong_id") Long dongId) {
 
-        PageRequest pageRequest = PageRequest.of(page - 1, ShelterVariable.PAGE_SIZE);
         Dong dong = dongService.findById(dongId);
-        Page<EarthquakeShelter> earthquakeShelters = earthquakeShelterService.findAllByDong(dong, pageRequest);
-        List<String> roadAddresses = earthquakeShelters.getContent().stream()
+        List<EarthquakeShelter> earthquakeShelters = earthquakeShelterService.findAllByDong(dong);
+        List<String> roadAddresses = earthquakeShelters.stream()
                 .map(e -> roadAddressParser.getRoadAddress(e.getAddress()))
                 .collect(Collectors.toList());
-        return ResponseEntity.ok(ShelterPageDto.of(earthquakeShelters, roadAddresses));
+        return ResponseEntity.ok(ShelterListDto.of(earthquakeShelters, roadAddresses));
     }
+
+//    @GetMapping("/api/shelters/earthquake")
+//    public ResponseEntity<ShelterPageDto> getEarthquakeSheltersByDong(@RequestParam("dong_id") Long dongId,
+//                                                                      @RequestParam("page") @Positive int page) {
+//
+//        PageRequest pageRequest = PageRequest.of(page - 1, ShelterVariable.PAGE_SIZE);
+//        Dong dong = dongService.findById(dongId);
+//        Page<EarthquakeShelter> earthquakeShelters = earthquakeShelterService.findAllByDong(dong, pageRequest);
+//        List<String> roadAddresses = earthquakeShelters.getContent().stream()
+//                .map(e -> roadAddressParser.getRoadAddress(e.getAddress()))
+//                .collect(Collectors.toList());
+//        return ResponseEntity.ok(ShelterPageDto.of(earthquakeShelters, roadAddresses));
+//    }
 
     @GetMapping("/api/shelters/earthquake/current")
     public ResponseEntity<ShelterListDto> getEarthquakeSheltersByCurrent(
