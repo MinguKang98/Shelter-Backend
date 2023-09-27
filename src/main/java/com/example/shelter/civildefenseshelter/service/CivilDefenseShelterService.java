@@ -26,6 +26,10 @@ public class CivilDefenseShelterService {
                 .orElseThrow(() -> new CivilDefenseShelterNotFoundException(id));
     }
 
+    public List<CivilDefenseShelter> findAllByDong(Dong dong) {
+        return civilDefenseShelterRepository.findAllByDongNotDeleted(dong);
+    }
+
     public Page<CivilDefenseShelter> findAllByDong(Dong dong, Pageable pageable) {
         return civilDefenseShelterRepository.findAllByDongNotDeleted(dong, pageable);
     }
