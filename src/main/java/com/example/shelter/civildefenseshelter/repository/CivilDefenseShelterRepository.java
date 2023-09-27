@@ -18,6 +18,9 @@ public interface CivilDefenseShelterRepository extends JpaRepository<CivilDefens
     Optional<CivilDefenseShelter> findByIdNotDeleted(@Param("id") Long id);
 
     @Query("select c from CivilDefenseShelter c where c.dong = :dong and c.isDeleted = false")
+    List<CivilDefenseShelter> findAllByDongNotDeleted(@Param("dong") Dong dong);
+
+    @Query("select c from CivilDefenseShelter c where c.dong = :dong and c.isDeleted = false")
     Page<CivilDefenseShelter> findAllByDongNotDeleted(@Param("dong") Dong dong, Pageable pageable);
 
     @Query("select c from CivilDefenseShelter c " +

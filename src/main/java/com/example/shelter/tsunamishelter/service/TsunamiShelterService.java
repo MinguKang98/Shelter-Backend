@@ -26,6 +26,10 @@ public class TsunamiShelterService {
                 .orElseThrow(() -> new TsunamiShelterNotFoundException(id));
     }
 
+    public List<TsunamiShelter> findAllByDong(Dong dong) {
+        return tsunamiShelterRepository.findAllByDongNotDeleted(dong);
+    }
+
     public Page<TsunamiShelter> findAllByDong(Dong dong, Pageable pageable) {
         return tsunamiShelterRepository.findAllByDongNotDeleted(dong, pageable);
     }

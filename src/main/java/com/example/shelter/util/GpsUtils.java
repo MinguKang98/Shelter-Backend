@@ -1,9 +1,12 @@
 package com.example.shelter.util;
 
+import com.example.shelter.shelter.Shelter;
 import org.locationtech.proj4j.BasicCoordinateTransform;
 import org.locationtech.proj4j.CRSFactory;
 import org.locationtech.proj4j.CoordinateReferenceSystem;
 import org.locationtech.proj4j.ProjCoordinate;
+
+import java.util.List;
 
 public class GpsUtils {
 
@@ -72,6 +75,16 @@ public class GpsUtils {
         ProjCoordinate afterCoord = new ProjCoordinate();
 
         return transformer.transform(beforeCoord, afterCoord);
+    }
+
+    public static double getAvgLatitude(List<? extends Shelter> shelters) {
+        double avgLatitude = shelters.stream().mapToDouble(Shelter::getLatitude).average().orElse(0);
+        return Double.parseDouble(String.format("%.6f", avgLatitude));
+    }
+
+    public static double getAvgLongitude(List<? extends Shelter> shelters) {
+        double avgLongitude = shelters.stream().mapToDouble(Shelter::getLongitude).average().orElse(0);
+        return Double.parseDouble(String.format("%.6f", avgLongitude));
     }
 
 }

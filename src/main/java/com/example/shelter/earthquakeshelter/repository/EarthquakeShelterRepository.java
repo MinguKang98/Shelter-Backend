@@ -18,6 +18,9 @@ public interface EarthquakeShelterRepository extends JpaRepository<EarthquakeShe
     Optional<EarthquakeShelter> findByIdNotDeleted(@Param("id") Long id);
 
     @Query("select e from EarthquakeShelter e where e.dong = :dong and e.isDeleted = false")
+    List<EarthquakeShelter> findAllByDongNotDeleted(@Param("dong") Dong dong);
+
+    @Query("select e from EarthquakeShelter e where e.dong = :dong and e.isDeleted = false")
     Page<EarthquakeShelter> findAllByDongNotDeleted(@Param("dong") Dong dong, Pageable pageable);
 
     @Query("select e from EarthquakeShelter e " +

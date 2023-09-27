@@ -37,14 +37,22 @@ public class CivilDefenseShelterController {
     }
 
     @GetMapping("/api/shelters/civil-defense")
-    public ResponseEntity<ShelterPageDto> getCivilDefenseSheltersByDong(@RequestParam("dong_id") Long dongId,
-                                                                      @RequestParam("page") @Positive int page) {
+    public ResponseEntity<ShelterListDto> getCivilDefenseSheltersByDong(@RequestParam("dong_id") Long dongId) {
 
-        PageRequest pageRequest = PageRequest.of(page - 1, ShelterVariable.PAGE_SIZE);
         Dong dong = dongService.findById(dongId);
-        Page<CivilDefenseShelter> civilDefenseShelters = civilDefenseShelterService.findAllByDong(dong, pageRequest);
-        return ResponseEntity.ok(ShelterPageDto.of(civilDefenseShelters));
+        List<CivilDefenseShelter> civilDefenseShelters = civilDefenseShelterService.findAllByDong(dong);
+        return ResponseEntity.ok(ShelterListDto.of(civilDefenseShelters));
     }
+
+//    @GetMapping("/api/shelters/civil-defense")
+//    public ResponseEntity<ShelterPageDto> getCivilDefenseSheltersByDong(@RequestParam("dong_id") Long dongId,
+//                                                                      @RequestParam("page") @Positive int page) {
+//
+//        PageRequest pageRequest = PageRequest.of(page - 1, ShelterVariable.PAGE_SIZE);
+//        Dong dong = dongService.findById(dongId);
+//        Page<CivilDefenseShelter> civilDefenseShelters = civilDefenseShelterService.findAllByDong(dong, pageRequest);
+//        return ResponseEntity.ok(ShelterPageDto.of(civilDefenseShelters));
+//    }
 
     @GetMapping("/api/shelters/civil-defense/current")
     public ResponseEntity<ShelterListDto> getCivilDefenseSheltersByCurrent(
