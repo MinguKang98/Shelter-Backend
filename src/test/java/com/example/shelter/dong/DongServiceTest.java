@@ -1,8 +1,10 @@
 package com.example.shelter.dong;
 
 import com.example.shelter.exception.notfound.DongNotFoundException;
+import com.example.shelter.shelter.address.Address;
 import com.example.shelter.sido.Sido;
 import com.example.shelter.sigungu.Sigungu;
+import com.example.shelter.util.NaverApiParser;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.InjectMocks;
@@ -23,6 +25,9 @@ class DongServiceTest {
 
     @Mock
     DongRepository dongRepository;
+
+    @Mock
+    NaverApiParser naverApiParser;
 
     @InjectMocks
     DongService dongService;
@@ -212,6 +217,46 @@ class DongServiceTest {
         //then
         assertThatThrownBy(() -> dongService.delete(id)).isInstanceOf(DongNotFoundException.class);
         verify(dongRepository, times(1)).findByIdNotDeleted(id);
+    }
+
+    @Test
+    public void findByCurrent_테스트(@Mock Sigungu sigungu) {
+        //given
+        Long id = 1L;
+        Dong dong = new Dong(id, "전농동", sigungu);
+        double lat = 37.577400;
+        double lon = 127.065355;
+        Address address = new Address("서울특별시", "동대문구", "전농동", "");
+        when(naverApiParser.getAddressByCurrent(lat, lon)).thenReturn(address);
+        when(dongRepository.findByAddressNames(address.getSidoName(), address.getSigunguName(), address.getDongName()))
+                .thenReturn(Optional.of(dong));
+
+        ///when
+        Dong currentDong = dongService.findByCurrent(lat, lon);
+
+        //then
+        assertThat(currentDong.getId()).isEqualTo(id);
+    }
+
+    @Test
+    public void findByCurrent_예외_테스트(@Mock Sigungu sigungu) {
+        //given
+        Long id = 1L;
+        Dong dong = new Dong(id, "전농동", sigungu);
+        double lat = 37.577400;
+        double lon = 127.065355;
+        Address address = new Address("서울특별시", "동대문구", "전농동", "");
+        when(naverApiParser.getAddressByCurrent(lat, lon)).thenReturn(address);
+        when(dongRepository.findByAddressNames(address.getSidoName(), address.getSigunguName(), address.getDongName()))
+                .thenReturn(Optional.empty());
+
+        ///when
+        Exception exception = catchException(() -> dongService.findByCurrent(lat, lon));
+
+        //then
+        assertThat(exception).isInstanceOf(DongNotFoundException.class);
+        DongNotFoundException dongNotFoundException = (DongNotFoundException) exception;
+        assertThat(dongNotFoundException.getErrors().get("name")).isEqualTo(address.getFullDongName());
     }
 
 }

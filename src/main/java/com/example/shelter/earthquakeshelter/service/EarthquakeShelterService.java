@@ -26,6 +26,9 @@ public class EarthquakeShelterService {
                 .orElseThrow(() -> new EarthquakeShelterNotFoundException(id));
     }
 
+    public List<EarthquakeShelter> findAllByDong(Dong dong) {
+        return earthquakeShelterRepository.findAllByDongNotDeleted(dong);
+    }
 
     public Page<EarthquakeShelter> findAllByDong(Dong dong, Pageable pageable) {
         return earthquakeShelterRepository.findAllByDongNotDeleted(dong, pageable);

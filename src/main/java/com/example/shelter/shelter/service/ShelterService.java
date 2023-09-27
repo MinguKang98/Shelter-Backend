@@ -1,6 +1,5 @@
 package com.example.shelter.shelter.service;
 
-import com.example.shelter.civildefenseshelter.CivilDefenseShelter;
 import com.example.shelter.shelter.Shelter;
 import com.example.shelter.shelter.repository.ShelterRepository;
 import com.example.shelter.util.GpsUtils;
